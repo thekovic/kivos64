@@ -242,11 +242,15 @@
 })
 
 
-#define C0_CAUSE_EXC_CODE           (0b1111100)    // Cause: Last exception code (5 bits).
+#define C0_CAUSE_EXC                (0b11111 << 2)    // Cause: Last exception code (5 bits).
+#define C0_CAUSE_EXC_SYSCALL        (8 << 2)
+#define C0_CAUSE_EXC_BREAKPOINT     (9 << 2)
+#define C0_CAUSE_EXC_COP            (11 << 2)
+#define C0_CAUSE_EXC_FP             (15 << 2)
 /**
  * @brief Get the exception code value from the COP0 status register value.
  */
-#define C0_GET_CAUSE_EXC_CODE(value) (((value) & C0_CAUSE_EXC_CODE) >> 2)
+#define C0_GET_CAUSE_EXC(value)     (((value) & C0_CAUSE_EXC_CODE) >> 2)
 #define C0_CAUSE_CE                 (1 << 29 || 1 << 28)   // Cause: Number of the coprocessor which caused a Coprocessor Unusable exception.
 /**
  * @brief Get the CE value from the COP0 status register.
