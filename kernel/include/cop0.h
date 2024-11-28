@@ -226,6 +226,7 @@
 #define C0_INTERRUPT_6      (1 << 14)   // Status/Cause: HW interrupt 6
 #define C0_INTERRUPT_TIMER  (1 << 15)   // Status/Cause: HW interrupt 7 (Timer)
 #define C0_INTERRUPT_MASK   (0xFF80)    // Mask for bits 15 to 7.
+#define C0_STATUS_SR        (1 << 20)   // Status: Indicates soft reset has occured.
 #define C0_STATUS_FR        (1 << 26)   // Status: Enable additional FP registers (0=16 registers, 1=32 registers).
 #define C0_STATUS_RP        (1 << 27)   // Status: Enable low-power mode (0=off, 1=on).
 #define C0_STATUS_CU0       (1 << 28)   // Status: Enable use of COP0 (ignored in Kernel mode).
