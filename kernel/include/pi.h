@@ -6,7 +6,7 @@
 #define PI_REG_BASE      (0xA4600000)
 
 // Base address of the SRAM save space in PI address space.
-#define PI_CART_ROM_BASE (0x08000000)
+#define PI_SRAM_ROM_BASE (0x08000000)
 // Base address of the cartridge ROM space in PI address space.
 #define PI_CART_ROM_BASE (0x10000000)
 
