@@ -46,6 +46,7 @@ _start:
 
 	/* reset cop0 status register */
 	jal cop0_status_reset
+	nop
 
 	/* Copy bootcode flags, stored in DMEM */
 	lui v0, 0xA400
