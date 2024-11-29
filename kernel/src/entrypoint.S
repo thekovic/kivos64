@@ -45,9 +45,7 @@ _start:
 	la gp, _gp
 
 	/* reset cop0 status register */
-	li a0, 0
 	jal cop0_status_reset
-	li a1, 0
 
 	/* Copy bootcode flags, stored in DMEM */
 	lui v0, 0xA400
