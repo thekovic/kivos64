@@ -60,6 +60,6 @@ typedef struct MI_registers_s
     uint32_t mask;              // MI_MASK register.
 } MI_registers_t;
 
-extern volatile const MI_registers_t* MI_regs;
+extern volatile MI_registers_t* const MI_regs;
 
 #endif

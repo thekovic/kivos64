@@ -40,6 +40,6 @@ typedef struct PI_registers_s
     // TODO: add remaining registers
 } PI_registers_t;
 
-extern volatile const PI_registers_t* PI_regs;
+extern volatile PI_registers_t* const PI_regs;
 
 #endif
