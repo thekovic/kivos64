@@ -1,7 +1,3 @@
-# General
-- create Makefile
-- create linker script
-
 # Kernel
 - VI driver
 - Display module
