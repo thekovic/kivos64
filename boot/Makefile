@@ -6,6 +6,9 @@ endif
 BUILD_DIR := build
 SOURCE_DIR := .
 
+IPL3_ROM := kivos64_ipl3.n64
+IPL3_LDSCRIPT := ipl3.ld
+
 SED ?= sed
 
 # Find installation of GCC for N64 toolchain from libdragon
@@ -33,17 +36,14 @@ N64_CFLAGS += -Wall -Werror -fdiagnostics-color=always -MMD
 
 N64_ASFLAGS := -mtune=vr4300 -march=vr4300 -mabi=32 -mgp32 -mfp32 -msingle-float -G0
 
-N64_LDFLAGS = -Wl,-T$(IPL3_LDSCRIPT) -Wl,-Map=$(BUILD_DIR)/ipl3.map -Wl,--gc-sections
+N64_LDFLAGS := -Wl,-T$(IPL3_LDSCRIPT) -Wl,-Map=$(BUILD_DIR)/ipl3.map -Wl,--gc-sections
 
 OBJS := $(BUILD_DIR)/ipl3.o $(BUILD_DIR)/loader.o $(BUILD_DIR)/boot_trampoline.o 
-
-IPL3_ROM := kivos64_ipl3.n64
-IPL3_LDSCRIPT := ipl3.ld
 
 all: $(IPL3_ROM)
 
 $(BUILD_DIR)/%.o: %.c
-	@echo "    [CC] $@"
+	@echo "    [CC] $<"
 	@mkdir -p $(BUILD_DIR)
 # Compile relocatable code. We need this for stage 2 which is relocated to RDRAM,
 # but in general it won't hurt for boot code. GCC MIPS doesn't have a way to do
@@ -55,7 +55,7 @@ $(BUILD_DIR)/%.o: %.c
 	$(N64_AS) $(N64_ASFLAGS) -o $@ $@.s
 
 $(BUILD_DIR)/%.o: %.S
-	@echo "    [AS] $@"
+	@echo "    [AS] $<"
 	@mkdir -p $(BUILD_DIR)
 	$(N64_CC) -c $(N64_ASFLAGS) -o $@ $<
 
@@ -72,7 +72,7 @@ disasm: $(BUILD_DIR)/ipl3.elf
 	$(N64_OBJDUMP) -D $(BUILD_DIR)/ipl3.elf
 
 clean:
-	rm -rf $(BUILD_DIR) kivos64_ipl3.n64
+	rm -rf $(BUILD_DIR) $(IPL3_ROM)
 
 -include $(wildcard $(BUILD_DIR)/*.d)
 
