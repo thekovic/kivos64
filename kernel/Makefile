@@ -36,6 +36,7 @@ N64_CFLAGS += -ffunction-sections -fdata-sections -g
 N64_CFLAGS += -ffast-math -ftrapping-math -fno-associative-math
 # Reasonable general GCC settings
 N64_CFLAGS += -Wall -Werror -fdiagnostics-color=always -MMD -std=gnu17
+N64_CFLAGS += -Wno-error=unused-variable -Wno-error=unused-but-set-variable -Wno-error=unused-function -Wno-error=unused-parameter -Wno-error=unused-but-set-parameter -Wno-error=unused-label -Wno-error=unused-local-typedefs -Wno-error=unused-const-variable
 # Add include folder
 N64_CFLAGS += -I$(INCLUDE_DIR)
 
