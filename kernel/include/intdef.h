@@ -32,4 +32,6 @@ typedef __UINT32_TYPE__ uint32_t;
 typedef __UINT64_TYPE__ uint64_t;
 #endif
 
+typedef uint32_t size_t;
+
 #endif
