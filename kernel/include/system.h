@@ -26,6 +26,20 @@ extern int __boot_resettype;
 #define ADDR_TO_KSEG0(addr) (addr | MEM_KSEG0_BASE)
 #define ADDR_TO_KSEG1(addr) (addr | MEM_KSEG1_BASE)
 
+void data_cache_index_writeback_invalidate(volatile void* addr, unsigned long length);
+
+void data_cache_hit_invalidate(volatile void* addr, unsigned long length);
+
+void data_cache_hit_writeback_invalidate(volatile void* addr, unsigned long length);
+
+void data_cache_hit_writeback(volatile void* addr, unsigned long length);
+
+void inst_cache_index_invalidate(volatile void* addr, unsigned long length);
+
+void inst_cache_hit_invalidate(volatile void* addr, unsigned long length);
+
+void inst_cache_hit_writeback(volatile void* addr, unsigned long length);
+
 __attribute__((noreturn))
 static inline void abort(void)
 {
