@@ -22,7 +22,9 @@ extern int __boot_resettype;
 #define MEM_KSEG3_BASE (0xE0000000)
 
 // Turn address in any segment into physical address.
-#define ADDR_TO_PHYS(addr) (addr & 0x1FFFFFFF)
+#define ADDR_TO_PHYS(addr)  (addr & 0x1FFFFFFF)
+#define ADDR_TO_KSEG0(addr) (addr | MEM_KSEG0_BASE)
+#define ADDR_TO_KSEG1(addr) (addr | MEM_KSEG1_BASE)
 
 __attribute__((noreturn))
 static inline void abort(void)

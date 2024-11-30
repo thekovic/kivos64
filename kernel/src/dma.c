@@ -16,7 +16,7 @@ void dma_wait(void)
 uint32_t io_read(uint32_t pi_address)
 {
     uint32_t result;
-    volatile uint32_t* uncached_address = (uint32_t*) (pi_address | MEM_KSEG1_BASE);
+    volatile uint32_t* uncached_address = (volatile uint32_t*) ADDR_TO_KSEG1(pi_address);
 
     interrupt_disable();
         dma_wait();
@@ -28,7 +28,7 @@ uint32_t io_read(uint32_t pi_address)
 
 void io_write(uint32_t pi_address, uint32_t data) 
 {
-    volatile uint32_t* uncached_address = (uint32_t*) (pi_address | MEM_KSEG1_BASE);
+    volatile uint32_t* uncached_address = (volatile uint32_t*) ADDR_TO_KSEG1(pi_address);
 
     interrupt_disable();
         dma_wait();
