@@ -1,5 +1,9 @@
 {
     "C_Cpp.default.includePath": [
         "${workspaceFolder}/kernel/include"
-    ]
+    ],
+    "files.associations": {
+        "*.h": "c",
+        "compare": "c"
+    }
 }
