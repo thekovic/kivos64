@@ -70,3 +70,12 @@ void init_kernel(void)
     isviewer_init();
     vi_init();
 }
+
+void assert(bool condition, const char* msg)
+{
+    if (!condition)
+    {
+        println(msg);
+        abort();
+    }
+}

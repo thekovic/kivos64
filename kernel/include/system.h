@@ -1,6 +1,8 @@
 #ifndef KIVOS64_SYSTEM_H
 #define KIVOS64_SYSTEM_H
 
+#include "intdef.h"
+
 // Memory size as detected by IPL3.
 extern int __boot_memsize;
 // Random seed provided by IPL3.
@@ -39,6 +41,10 @@ void inst_cache_index_invalidate(volatile void* addr, unsigned long length);
 void inst_cache_hit_invalidate(volatile void* addr, unsigned long length);
 
 void inst_cache_hit_writeback(volatile void* addr, unsigned long length);
+
+void print(const char* data);
+void println(const char* data);
+void assert(bool condition, const char* msg);
 
 __attribute__((noreturn))
 static inline void abort(void)
