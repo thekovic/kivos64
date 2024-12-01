@@ -3,7 +3,9 @@
 
 #include "intdef.h"
 
-#define NULL    0
+void* malloc(size_t numbytes);
+
+void* malloc_uncached(size_t numbytes);
 
 void* memcpy(void* dest, const void* src, size_t len);
 

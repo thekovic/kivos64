@@ -101,7 +101,7 @@ size_t strlen(const char* str)
 
 char* utoa(uint32_t value, char *str, int base)
 {
-    const char digits[] = "0123456789abcdefghijklmnopqrstuvwxyz";
+    const char digits[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     int i, j;
     uint32_t remainder;
     char c;

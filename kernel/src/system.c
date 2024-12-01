@@ -60,8 +60,10 @@ void vi_init(void)
     VI_regs->y_scale = VI_Y_SCALE_SET(240, 240);
 }
 
+// Forward declare init functions.
 bool interrupt_init(void);
 bool isviewer_init(void);
+void malloc_init(void);
 
 void init_kernel(void)
 {
@@ -69,6 +71,7 @@ void init_kernel(void)
     interrupt_init();
     isviewer_init();
     vi_init();
+    malloc_init();
 }
 
 void assert(bool condition, const char* msg)
