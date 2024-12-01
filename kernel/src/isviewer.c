@@ -21,7 +21,9 @@
 // ISViewer buffer length.
 #define ISVIEWER_BUFFER_LEN     0x00000200
 
-bool isviewer_init(void)
+static bool is_enabled;
+
+bool isviewer_init_impl(void)
 {
     // To check whether an ISViewer is present (probably emulated),
     // write some data to the "magic" register. If we can read it
@@ -40,8 +42,19 @@ bool isviewer_init(void)
     return io_read(ISVIEWER_MAGIC_ADDR) == magic;
 }
 
+bool isviewer_init(void)
+{
+    is_enabled = isviewer_init_impl();
+    return is_enabled;
+}
+
 void isviewer_write(const uint8_t* data, int len)
 {
+    if (!is_enabled)
+    {
+        return;
+    }
+
     while (len > 0)
     {
         uint32_t l = (len < ISVIEWER_BUFFER_LEN) ? len : ISVIEWER_BUFFER_LEN;
