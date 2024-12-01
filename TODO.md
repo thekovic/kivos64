@@ -7,6 +7,7 @@
 - Asset module
 - Filesystem
 - Paging/TLB manager
+- malloc
 
 # Game
 - Make it?
