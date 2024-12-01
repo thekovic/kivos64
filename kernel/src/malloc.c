@@ -1,10 +1,10 @@
 #include "intdef.h"
 #include "system.h"
 
-#define ONE_MB (1024 * 1024)
-#define RAM_SIZE (ONE_MB * 8)
-#define KERNEL_HEAP_START ((1 * ONE_MB) | MEM_KSEG0_BASE)
-#define KERNEL_HEAP_END ((RAM_SIZE - ONE_MB) | MEM_KSEG0_BASE)
+#define ONE_MB                  (1024 * 1024)
+#define RAM_SIZE                (ONE_MB * 8)
+#define KERNEL_HEAP_START       (ADDR_TO_KSEG0(1 * ONE_MB))
+#define KERNEL_HEAP_END         (ADDR_TO_KSEG0(RAM_SIZE - ONE_MB))
 
 _Static_assert(KERNEL_HEAP_START == 0x80100000, "KERNEL_HEAP_START != 0x80100000");
 
@@ -82,6 +82,6 @@ void* malloc(size_t numbytes)
 
 void* malloc_uncached(size_t numbytes)
 {
-    uint32_t mem_uncached = ((uint32_t) malloc(numbytes) | MEM_KSEG1_BASE);
+    uint32_t mem_uncached = ADDR_TO_KSEG1((uint32_t) malloc(numbytes));
     return (void*) mem_uncached;
 }
