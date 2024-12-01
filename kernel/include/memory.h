@@ -19,6 +19,6 @@ size_t strlen(const char* str);
 
 char* utoa(uint32_t value, char *str, int base);
 
-void itoa(int value, char* str, int base);
+char* itoa(int value, char* str, int base);
 
 #endif

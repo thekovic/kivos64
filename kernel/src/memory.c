@@ -134,7 +134,7 @@ char* utoa(uint32_t value, char *str, int base)
     return str;
 }
 
-void itoa(int value, char* str, int base)
+char* itoa(int value, char* str, int base)
 {
     uint32_t uvalue;
     int i = 0;
