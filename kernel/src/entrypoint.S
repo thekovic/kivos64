@@ -61,6 +61,10 @@ _start:
 	sw t0, %gprel(__boot_tvtype)(gp)
 	sw t1, %gprel(__boot_resettype)(gp)
 
+	/* reset cop0 status register */
+	jal init_kernel
+	nop
+
 	/* call main app */
 	li a0, 0
 	jal main
