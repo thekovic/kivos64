@@ -11,6 +11,7 @@
 
 #include "intdef.h"
 #include "dma.h"
+#include "memory.h"
 
 // ISViewer register for magic value (to check ISViewer presence).
 #define ISVIEWER_MAGIC_ADDR     0x13FF0000
@@ -81,7 +82,28 @@ void isviewer_write(const uint8_t* data, int len)
     }
 }
 
-void printn(const char* data, int len)
+static inline void printn(const char* data, int len)
 {
     isviewer_write((uint8_t*) data, len);
+}
+
+char print_buffer[128];
+
+static int print_prepare(const char* data)
+{
+    strncpy(print_buffer, data, 128);
+    return strlen(print_buffer);
+}
+
+void println(const char* data)
+{
+    int len = print_prepare(data);
+    print_buffer[len] = '\n';
+    printn(print_buffer, len + 1);
+}
+
+void print(const char* data)
+{
+    int len = print_prepare(data);
+    printn(print_buffer, len);
 }
