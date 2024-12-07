@@ -58,4 +58,13 @@ void surface_free(surface_t surface);
  */
 void graphics_draw_pixel(surface_t* surface, int x, int y, uint32_t color);
 
+
+/**
+ * @brief 
+ * 
+ * @param[in]  surface  The surface to draw to.
+ * @param[in]  color 
+ */
+void graphics_fill(surface_t* surface, uint32_t color);
+
 #endif
