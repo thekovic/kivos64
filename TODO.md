@@ -1,13 +1,11 @@
 # Kernel
-- VI driver
-- Display module
-- 2D graphics module
+- Display module - we probably need double-buffering
 - Audio driver
 - Joypad driver
-- Asset module
+- Asset module (might settle for hardcoded?)
 - Filesystem
 - Paging/TLB manager
-- malloc
+- free?
 
 # Game
 - Make it?

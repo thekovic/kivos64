@@ -86,4 +86,123 @@ void graphics_draw_pixel_alpha(surface_t* surface, int x, int y, uint32_t color)
     draw_pixel(surface->buffer, index, new_color);
 }
 
+typedef struct clip_area_s
+{
+    int x_start;
+    int y_start;
+    int x_end;
+    int y_end;
+} clip_area_t;
+
+static clip_area_t clip_surface(surface_t* dst, int x, int y, surface_t* src)
+{
+    // Source surface bounds.
+    int start_x = 0;
+    int start_y = 0;
+    int end_x = src->width;
+    int end_y = src->height;
+
+    // Clip left.
+    if (x < 0)
+    {
+        start_x += (x * -1);
+    }
+    // Clip top.
+    if (y < 0)
+    {
+        start_y += (y * -1);
+    }
+    // Clip right.
+    if ((x + end_x) >= (int) dst->width)
+    {
+        end_x = dst->width - x;
+    }
+    // Clipbottom.
+    if ((y + end_y) >= (int) dst->height)
+    {
+        end_y = dst->height - y;
+    }
+
+    return (clip_area_t) {.x_start = start_x, .y_start = start_y, .x_end = end_x, .y_end = end_y};
+}
+
+void graphics_draw_surface(surface_t* dst, int x, int y, surface_t* src)
+{
+    // Sanity checking
+    if (dst->buffer == NULL)
+    {
+        return;
+    }
+    if (src->buffer == NULL)
+    {
+        return;
+    }
+
+    // Exit early if all drawing would go off-surface.
+    if (((x + (int) src->width) <= 0) ||
+        ((y + (int) src->height) <= 0) ||
+        (x >= (int) dst->width) ||
+        (y >= (int) dst->height))
+    {
+        return;
+    }
+
+    clip_area_t clip_area = clip_surface(dst, x, y, src);
+
+    for (int src_row = clip_area.y_start; src_row < clip_area.y_end; src_row++ )
+    {
+        const int y_index = src_row * src->width;
+
+        for (int src_col = clip_area.x_start; src_col < clip_area.x_end; src_col++ )
+        {
+            const int index = (x + src_col) + ((y + src_row) * dst->width);
+            draw_pixel(dst->buffer, index, get_pixel(src->buffer, y_index + src_col));
+        }
+    }
+}
+
+void graphics_draw_surface_alpha(surface_t* dst, int x, int y, surface_t* src)
+{
+    // Sanity checking
+    if (dst->buffer == NULL)
+    {
+        return;
+    }
+    if (src->buffer == NULL)
+    {
+        return;
+    }
+
+    // Exit early if all drawing would go off-surface.
+    if (((x + (int) src->width) <= 0) ||
+        ((y + (int) src->height) <= 0) ||
+        (x >= (int) dst->width) ||
+        (y >= (int) dst->height))
+    {
+        return;
+    }
+
+    clip_area_t clip_area = clip_surface(dst, x, y, src);
+
+    for (int src_row = clip_area.y_start; src_row < clip_area.y_end; src_row++ )
+    {
+        const int y_index = src_row * src->width;
+
+        for (int src_col = clip_area.x_start; src_col < clip_area.x_end; src_col++ )
+        {
+            const int index = (x + src_col) + ((y + src_row) * dst->width);
+            const uint32_t src_color = get_pixel(src->buffer, y_index + src_col);
+            // Defer to basic drawing if color is fully opaque.
+            if ((src_color & 0xFF) == 0xFF)
+            {
+                draw_pixel(dst->buffer, index, src_color);
+            }
+            else
+            {
+                const uint32_t dst_color = get_pixel(dst->buffer, index);
+                uint32_t new_color = alphablend_pixel(dst_color, src_color);
+                draw_pixel(dst->buffer, index, new_color);
+            }
+        }
+    }
 }

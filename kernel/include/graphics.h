@@ -75,8 +75,29 @@ void graphics_draw_pixel_alpha(surface_t* surface, int x, int y, uint32_t color)
  * @brief 
  * 
  * @param[in]  surface  The surface to draw to.
- * @param[in]  color 
+ * @param[in]  color    The 32-bit RGBA color to draw to the screen.
  */
 void graphics_fill(surface_t* surface, uint32_t color);
+
+/**
+ * @brief Draws surface-to-surface while performing clipping.
+ * 
+ * @param[in]  dst      The surface to draw to.
+ * @param[in]  x 
+ * @param[in]  y 
+ * @param[in]  src      The surface to draw from.
+ */
+void graphics_draw_surface(surface_t* dst, int x, int y, surface_t* src);
+
+/**
+ * @brief Draws surface-to-surface while performing clipping and alphablending.
+ * Useful for drawing sprites.
+ * 
+ * @param[in]  dst      The surface to draw to.
+ * @param[in]  x        The x coordinate of the pixel.
+ * @param[in]  y        The y coordinate of the pixel.
+ * @param[in]  src      The surface to draw from.
+ */
+void graphics_draw_surface_alpha(surface_t* dst, int x, int y, surface_t* src);
 
 #endif
