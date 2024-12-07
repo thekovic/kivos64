@@ -58,6 +58,18 @@ void surface_free(surface_t surface);
  */
 void graphics_draw_pixel(surface_t* surface, int x, int y, uint32_t color);
 
+/**
+ * @brief Draw an alpha-blended pixel to a given surface.
+ * 
+ * @note This function does not support clipping. Specifying x/y out of surface
+ * bounds will result in writing to unintended memory.
+ *
+ * @param[in]  surface  The surface to draw to.
+ * @param[in]  x        The x coordinate of the pixel.
+ * @param[in]  y        The y coordinate of the pixel.
+ * @param[in]  color    The 32-bit RGBA color to draw to the screen.
+ */
+void graphics_draw_pixel_alpha(surface_t* surface, int x, int y, uint32_t color);
 
 /**
  * @brief 
