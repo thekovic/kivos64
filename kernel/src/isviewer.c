@@ -89,21 +89,38 @@ static inline void printn(const char* data, int len)
 
 char print_buffer[128];
 
-static int print_prepare(const char* data)
-{
-    strncpy(print_buffer, data, 128);
-    return strlen(print_buffer);
-}
-
 void println(const char* data)
 {
-    int len = print_prepare(data);
+    strncpy(print_buffer, data, 128);
+    int len = strlen(print_buffer);
     print_buffer[len] = '\n';
     printn(print_buffer, len + 1);
 }
 
 void print(const char* data)
 {
-    int len = print_prepare(data);
+    strncpy(print_buffer, data, 128);
+    int len = strlen(print_buffer);
     printn(print_buffer, len);
+}
+
+static void println_u(const char* data, uint32_t value, int base)
+{
+    strncpy(print_buffer, data, 96);
+    char str_buf[32];
+    utoa(value, str_buf, base);
+    strncat(print_buffer, str_buf, 32);
+    int len = strlen(print_buffer);
+    print_buffer[len] = '\n';
+    printn(print_buffer, len + 1);
+}
+
+void println_u32(const char* data, uint32_t value)
+{
+    println_u(data, value, 10);
+}
+
+void println_x32(const char* data, uint32_t value)
+{
+    println_u(data, value, 16);
 }

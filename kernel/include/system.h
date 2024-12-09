@@ -44,6 +44,8 @@ void inst_cache_hit_writeback(volatile void* addr, unsigned long length);
 
 void print(const char* data);
 void println(const char* data);
+void println_u32(const char* data, uint32_t value);
+void println_x32(const char* data, uint32_t value);
 void assert(bool condition, const char* msg);
 
 __attribute__((noreturn))
