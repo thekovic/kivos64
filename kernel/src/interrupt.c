@@ -1,6 +1,7 @@
 #include "intdef.h"
 #include "cop0.h"
 #include "mi.h"
+#include "vi.h"
 #include "system.h"
 
 /** @brief Number of nested disable interrupt calls
@@ -70,10 +71,7 @@ void interrupt_enable()
     }
 
     // Check that we're not calling enable_interrupts() more times than expected.
-    if (__interrupt_depth == 0)
-    {
-        abort();
-    }
+    assert(__interrupt_depth > 0, "Unbalanced interrupt_enable() call.");
 
     // Decrement the nesting level now that we are enabling interrupts.
     __interrupt_depth--;
@@ -82,5 +80,18 @@ void interrupt_enable()
     {
         // Restore the interrupt state that was active when interrupts got disabled.
         C0_WRITE_STATUS(C0_STATUS() | (__interrupt_sr & C0_STATUS_IE));
+    }
+}
+
+void interrupt_set_VI(bool active, uint32_t line)
+{
+    if (active)
+    {
+        MI_regs->mask = MI_MASK_SET_VI;
+        VI_regs->v_interrupt = line;
+    }
+    else
+    {
+        MI_regs->mask = MI_MASK_CLR_VI;
     }
 }

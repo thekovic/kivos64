@@ -5,11 +5,19 @@ ENTRY (_start)
 
 PHDRS
 {
+    irq PT_LOAD AT ( 0x80000000 );
     main PT_LOAD AT ( 0x80000400 );
 }
 
 SECTIONS
 {
+    /* Interrupt vectors are at specific addresses (see page 200). */
+    .intvectors 0x80000000 : {
+        . = ALIGN(32);
+        KEEP(*(.intvectors))
+        __intvectors_end = .;
+    } :irq
+
     /* The text section carries the app code and its relocation address is
     * the first byte of the cart domain in cached, unmapped memory
     */

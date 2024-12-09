@@ -5,4 +5,6 @@ void interrupt_disable();
 
 void interrupt_enable();
 
+void interrupt_set_VI(bool active, uint32_t line);
+
 #endif

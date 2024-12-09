@@ -42,6 +42,10 @@ void cop1_init(void)
     C1_WRITE_FCR31(fcr31);
 }
 
+/**
+ * @brief Set up default VI register values for displaying 320x240 NTSC image.
+ * 
+ */
 void vi_init(void)
 {
     VI_regs->control = (VI_CTRL_TYPE_32_BPP | VI_CTRL_AA_RESAMPLE | VI_CTRL_PIXEL_ADVANCE_DEFAULT);
@@ -58,6 +62,8 @@ void vi_init(void)
     VI_regs->v_burst = VI_V_BURST_SET(14, 516);
     VI_regs->x_scale = VI_X_SCALE_SET(320, 640);
     VI_regs->y_scale = VI_Y_SCALE_SET(240, 240);
+
+    interrupt_set_VI(true, VI_V_CURRENT_VBLANK);
 }
 
 // Forward declare init functions.
@@ -81,4 +87,28 @@ void assert(bool condition, const char* msg)
         println(msg);
         abort();
     }
+}
+
+void inthandler_test1(void)
+{
+    println("I am handling this interrupt kinda 1.");
+}
+
+void inthandler_test2(void)
+{
+    println("I am handling this interrupt kinda 2.");
+}
+
+void inthandler_test3(void)
+{
+    println("I am handling this interrupt kinda 3.");
+}
+
+void inthandler_test4(void)
+{
+    println("I am handling this interrupt kinda 4.");
+    interrupt_disable();
+        println_x32("MI_INTERRUPT: ", MI_regs->interrupt);
+        VI_regs->v_current = 2;
+    interrupt_enable();
 }

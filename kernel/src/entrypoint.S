@@ -36,6 +36,25 @@
 #define fp0	$f0
 #define fp1	$f1
 
+	.section .intvectors, "ax"
+	.set reorder
+
+	.org 0
+	jal inthandler_test1
+	nop
+
+	.org 0x80
+	jal inthandler_test2
+	nop
+
+	.org 0x100
+	jal inthandler_test3
+	nop
+
+	.org 0x180
+	jal inthandler_test4
+	nop
+
 	.set noreorder
 
 	.section .boot
