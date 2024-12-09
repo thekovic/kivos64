@@ -32,25 +32,25 @@
 #define MI_INTERRUPT_DP             (1 << 6)      // Pending interrupt: RDP SYNC_FULL has finished.
 
 // Read bits.
-#define MI_MASK_SP                  (1 << 1)          // Mask for RSP interrupt.
-#define MI_MASK_SI                  (1 << 2)          // Mask for SI transfer interrupt.
-#define MI_MASK_AI                  (1 << 3)          // Mask for AI buffer playback interrupt.
-#define MI_MASK_VI                  (1 << 4)          // Mask for VI line match interrupt.
-#define MI_MASK_PI                  (1 << 5)          // Mask for PI transfer interrupt.
-#define MI_MASK_DP                  (1 << 6)          // Mask for RDP SYNC_FULL interrupt.
+#define MI_MASK_SP                  (1 << 0)          // Mask for RSP interrupt.
+#define MI_MASK_SI                  (1 << 1)          // Mask for SI transfer interrupt.
+#define MI_MASK_AI                  (1 << 2)          // Mask for AI buffer playback interrupt.
+#define MI_MASK_VI                  (1 << 3)          // Mask for VI line match interrupt.
+#define MI_MASK_PI                  (1 << 4)          // Mask for PI transfer interrupt.
+#define MI_MASK_DP                  (1 << 5)          // Mask for RDP SYNC_FULL interrupt.
 // Write bits.
-#define MI_MASK_CLR_SP              (1 << 1)       // Disable RSP interrupt.
-#define MI_MASK_SET_SP              (1 << 2)       // Enable RSP interrupt.
-#define MI_MASK_CLR_SI              (1 << 3)       // Disable SI transfer interrupt.
-#define MI_MASK_SET_SI              (1 << 4)       // Enable SI transfer interrupt.
-#define MI_MASK_CLR_AI              (1 << 5)       // Disable AI buffer playback interrupt.
-#define MI_MASK_SET_AI              (1 << 6)       // Enable AI buffer playback interrupt.
-#define MI_MASK_CLR_VI              (1 << 7)       // Disable VI line match interrupt.
-#define MI_MASK_SET_VI              (1 << 8)       // Enable VI line match interrupt.
-#define MI_MASK_CLR_PI              (1 << 9)       // Disable PI transfer interrupt.
-#define MI_MASK_SET_PI              (1 << 10)      // Enable PI transfer interrupt.
-#define MI_MASK_CLR_DP              (1 << 11)      // Disable RDP SYNC_FULL interrupt.
-#define MI_MASK_SET_DP              (1 << 12)      // Enable RDP SYNC_FULL interrupt.
+#define MI_MASK_CLR_SP              (1 << 0)       // Disable RSP interrupt.
+#define MI_MASK_SET_SP              (1 << 1)       // Enable RSP interrupt.
+#define MI_MASK_CLR_SI              (1 << 2)       // Disable SI transfer interrupt.
+#define MI_MASK_SET_SI              (1 << 3)       // Enable SI transfer interrupt.
+#define MI_MASK_CLR_AI              (1 << 4)       // Disable AI buffer playback interrupt.
+#define MI_MASK_SET_AI              (1 << 5)       // Enable AI buffer playback interrupt.
+#define MI_MASK_CLR_VI              (1 << 6)       // Disable VI line match interrupt.
+#define MI_MASK_SET_VI              (1 << 7)       // Enable VI line match interrupt.
+#define MI_MASK_CLR_PI              (1 << 8)       // Disable PI transfer interrupt.
+#define MI_MASK_SET_PI              (1 << 9)       // Enable PI transfer interrupt.
+#define MI_MASK_CLR_DP              (1 << 10)      // Disable RDP SYNC_FULL interrupt.
+#define MI_MASK_SET_DP              (1 << 11)      // Enable RDP SYNC_FULL interrupt.
 
 typedef struct MI_registers_s
 {
