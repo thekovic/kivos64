@@ -24,12 +24,12 @@
 #define MI_MODE_CLR_UPPER           (1 << 12)     // Disable upper mode.
 #define MI_MODE_SET_UPPER           (1 << 13)     // Enable upper mode.
 
-#define MI_INTERRUPT_SP             (1 << 1)      // Pending interrupt: RSP interrupt requested.
-#define MI_INTERRUPT_SI             (1 << 2)      // Pending interrupt: SI transfer finished.
-#define MI_INTERRUPT_AI             (1 << 3)      // Pending interrupt: AI buffer playback started.
-#define MI_INTERRUPT_VI             (1 << 4)      // Pending interrupt: VI line match (normally, vblank).
-#define MI_INTERRUPT_PI             (1 << 5)      // Pending interrupt: PI transfer finished.
-#define MI_INTERRUPT_DP             (1 << 6)      // Pending interrupt: RDP SYNC_FULL has finished.
+#define MI_INTERRUPT_SP             (1 << 0)      // Pending interrupt: RSP interrupt requested.
+#define MI_INTERRUPT_SI             (1 << 1)      // Pending interrupt: SI transfer finished.
+#define MI_INTERRUPT_AI             (1 << 2)      // Pending interrupt: AI buffer playback started.
+#define MI_INTERRUPT_VI             (1 << 3)      // Pending interrupt: VI line match (normally, vblank).
+#define MI_INTERRUPT_PI             (1 << 4)      // Pending interrupt: PI transfer finished.
+#define MI_INTERRUPT_DP             (1 << 5)      // Pending interrupt: RDP SYNC_FULL has finished.
 
 // Read bits.
 #define MI_MASK_SP                  (1 << 0)          // Mask for RSP interrupt.
