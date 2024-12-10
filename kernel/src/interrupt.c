@@ -95,3 +95,19 @@ void interrupt_set_VI(bool active, uint32_t line)
         MI_regs->mask = MI_MASK_CLR_VI;
     }
 }
+
+void interrupt_handler(void)
+{
+    // Disable FPU, reset to kernel mode, disable exception flag and disable global exceptions.
+    uint32_t sr = C0_STATUS() & ~(C0_STATUS_CU1 | C0_STATUS_KSU | C0_STATUS_EXL | C0_STATUS_IE);
+    C0_WRITE_STATUS(sr);
+
+    // Get MI interrupt status to handle.
+    uint32_t status = MI_regs->interrupt & MI_regs->mask;
+
+    if (status & MI_INTERRUPT_VI)
+    {
+        // Clear interrupt.
+    	VI_regs->v_current = 4;
+    }
+}

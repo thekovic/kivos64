@@ -210,10 +210,10 @@
 #define C0_STATUS_IE        (1 << 0)    // Status: Global interrupt enable (0=off, 1=on).
 #define C0_STATUS_EXL       (1 << 1)    // Status: Exception level (0=normal, 1=exception).
 #define C0_STATUS_ERL       (1 << 2)    // Status: Error level (0=normal, 1=error).
-#define C0_KSU_KERNEL            (0)    // Signifies Kernel mode for the COP0 Status register.
-#define C0_KSU_SUPERVISOR        (1)    // Signifies Supervisor mode for the COP0 Status register.
-#define C0_KSU_USER              (2)    // Signifies User mode for the COP0 Status register.
-#define C0_STATUS_KSU       (1 << 3)    // Status: Mode bits.
+#define C0_KSU_KERNEL       (0x0 << 3)    // Signifies Kernel mode for the COP0 Status register.
+#define C0_KSU_SUPERVISOR   (0x1 << 3)    // Signifies Supervisor mode for the COP0 Status register.
+#define C0_KSU_USER         (0x2 << 3)    // Signifies User mode for the COP0 Status register.
+#define C0_STATUS_KSU       (0x3 << 3)    // Status: Mode bits.
 #define C0_STATUS_UX        (1 << 5)    // Status: 64-bit addressing in User mode (0=off, 1=on).
 #define C0_STATUS_SX        (1 << 6)    // Status: 64-bit addressing in Supervisor mode (0=off, 1=on).
 #define C0_STATUS_KX        (1 << 7)    // Status: 64-bit addressing in Kernel mode (0=off, 1=on).

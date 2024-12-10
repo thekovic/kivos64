@@ -88,27 +88,3 @@ void assert(bool condition, const char* msg)
         abort();
     }
 }
-
-void inthandler_test1(void)
-{
-    println("I am handling this interrupt kinda 1.");
-}
-
-void inthandler_test2(void)
-{
-    println("I am handling this interrupt kinda 2.");
-}
-
-void inthandler_test3(void)
-{
-    println("I am handling this interrupt kinda 3.");
-}
-
-void inthandler_test4(void)
-{
-    println("I am handling this interrupt kinda 4.");
-    interrupt_disable();
-        println_x32("MI_INTERRUPT: ", MI_regs->interrupt);
-        VI_regs->v_current = 2;
-    interrupt_enable();
-}
