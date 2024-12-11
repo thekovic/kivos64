@@ -42,6 +42,18 @@ surface_t surface_alloc(uint16_t width, uint16_t height);
  */
 void surface_free(surface_t surface);
 
+typedef enum
+{
+    FILTER_NONE,
+    FILTER_RESAMPLE
+} filter_t;
+
+void display_init(int width, int height, filter_t filter);
+
+surface_t* display_get(void);
+
+void display_show(surface_t* surface);
+
 /**
  * @brief Draw a pixel to a given surface.
  *

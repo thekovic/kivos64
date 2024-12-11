@@ -48,7 +48,7 @@ void cop1_init(void)
  */
 void vi_init(void)
 {
-    VI_regs->control = (VI_CTRL_TYPE_32_BPP | VI_CTRL_AA_RESAMPLE | VI_CTRL_PIXEL_ADVANCE_DEFAULT);
+    VI_regs->control = (VI_CTRL_TYPE_BLANK | VI_CTRL_AA_RESAMPLE | VI_CTRL_PIXEL_ADVANCE_DEFAULT);
     VI_regs->origin = VI_ORIGIN_SET(0);
     VI_regs->width = VI_WIDTH_SET(320);
     VI_regs->v_interrupt = VI_V_INTR_SET(2);
@@ -62,8 +62,6 @@ void vi_init(void)
     VI_regs->v_burst = VI_V_BURST_SET(14, 516);
     VI_regs->x_scale = VI_X_SCALE_SET(320, 640);
     VI_regs->y_scale = VI_Y_SCALE_SET(240, 240);
-
-    interrupt_set_VI(true, VI_V_CURRENT_VBLANK);
 }
 
 // Forward declare init functions.

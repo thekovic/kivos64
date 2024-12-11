@@ -71,7 +71,7 @@ void interrupt_enable()
     }
 
     // Check that we're not calling enable_interrupts() more times than expected.
-    assert(__interrupt_depth > 0, "Unbalanced interrupt_enable() call.");
+    assert(__interrupt_depth > 0, "interrupt_enable: Unbalanced call.");
 
     // Decrement the nesting level now that we are enabling interrupts.
     __interrupt_depth--;
@@ -96,6 +96,9 @@ void interrupt_set_VI(bool active, uint32_t line)
     }
 }
 
+// Forward declare callback for display module.
+void __display_callback();
+
 void interrupt_handler(void)
 {
     // Disable FPU, reset to kernel mode, disable exception flag and disable global exceptions.
@@ -109,5 +112,6 @@ void interrupt_handler(void)
     {
         // Clear interrupt.
     	VI_regs->v_current = 4;
+        __display_callback();
     }
 }
