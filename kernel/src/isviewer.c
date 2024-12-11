@@ -108,7 +108,7 @@ static void println_u(const char* data, uint32_t value, int base)
 {
     strncpy(print_buffer, data, 96);
     char str_buf[32];
-    utoa(value, str_buf, base);
+    itoa(value, str_buf, base);
     strncat(print_buffer, str_buf, 32);
     int len = strlen(print_buffer);
     print_buffer[len] = '\n';
