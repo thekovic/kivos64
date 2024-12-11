@@ -69,13 +69,21 @@ void* malloc(size_t numbytes)
     void* allocated_mem = ((void*) block) + sizeof(block_info_t);
 
     block_info_t* new_block = (block_info_t*) (allocated_mem + numbytes_aligned);
-    new_block->prev = NULL;
+    new_block->prev = block->prev;
     new_block->next = block;
     new_block->is_free = true;
     new_block->size = block->size - numbytes_aligned - sizeof(block_info_t);
 
     block->prev = new_block;
     block->size = numbytes_aligned;
+    block->is_free = false;
+
+    // If we allocated into block in list head,
+    // make new block the new head now.
+    if (block == mem_block_list_head)
+    {
+        mem_block_list_head = new_block;
+    }
 
     return allocated_mem;
 }
