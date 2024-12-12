@@ -105,11 +105,11 @@ void interrupt_set_SI(bool active)
 // Forward declare callbacks for interrupts.
 
 // Swaps frame buffers.
-void __display_callback();
+void __display_callback(void);
 // Issues SI DMA to read controller state.
-void __joypad_callback();
+void __joypad_callback(void);
 // Updates internal controller state when SI DMA finishes.
-void __controller_callback();
+void __controller_callback(void);
 
 void interrupt_handler(void)
 {

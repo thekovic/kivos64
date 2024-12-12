@@ -2,6 +2,7 @@
 #include "system.h"
 #include "interrupt.h"
 #include "memory.h"
+#include "controller.h"
 
 // Joybus protocol packet size in bytes.
 #define JOYBUS_PACKET_SIZE          (64)
@@ -23,10 +24,12 @@
 /** @brief Joybus temporary output buffer. */
 static uint32_t joybus_buffer[JOYBUS_PACKET_WORDS] __attribute__((aligned(16)));
 
-uint32_t next = 0;
+static controller_data_t previous;
+static controller_data_t current;
+static controller_data_t next;
 
 /** @brief Receive a Joybus reply from the PIF and write it into a buffer in RAM. */
-void __joypad_callback()
+void __joypad_callback(void)
 {
     assert((SI_regs->status & (SI_STATUS_DMA_BUSY | SI_STATUS_IO_BUSY)) == 0, "__joypad_callback: Called when SI is busy.");
 
@@ -37,14 +40,9 @@ void __joypad_callback()
 }
 
 /** @brief Read Joybus reply after SI DMA finishes. */
-void __controller_callback()
+void __controller_callback(void)
 {
     memcpy((void*) &next, joybus_buffer + 1, sizeof(uint32_t));
-        
-    if (next != 0)
-    {
-        println_x32("pressed = ", next);
-    }
 }
 
 /** @brief Initialize the joybus module. */
@@ -71,4 +69,41 @@ void joybus_init(void)
 
     // Activate SI interrupt.
     interrupt_set_SI(true);
+}
+
+void controller_poll(void)
+{
+    previous.raw = current.raw;
+    current.raw = next.raw;
+}
+
+controller_data_t controller_get_inputs(void)
+{
+    return current;
+}
+
+controller_buttons_t controller_get_buttons(void)
+{
+    return current.buttons;
+}
+
+controller_buttons_t controller_get_buttons_pressed(void)
+{
+    uint16_t current_buttons = current.buttons.raw;
+    uint16_t previous_buttons = previous.buttons.raw;
+    return (controller_buttons_t) {.raw = current_buttons & ~previous_buttons};
+}
+
+controller_buttons_t controller_get_buttons_released(void)
+{
+    const uint16_t current_buttons = current.buttons.raw;
+    const uint16_t previous_buttons = previous.buttons.raw;
+    return (controller_buttons_t) {.raw = ~current_buttons & previous_buttons};
+}
+
+controller_buttons_t controller_get_buttons_held(void)
+{
+    const uint16_t current_buttons = current.buttons.raw;
+    const uint16_t previous_buttons = previous.buttons.raw;
+    return (controller_buttons_t) {.raw = current_buttons & previous_buttons};
 }
