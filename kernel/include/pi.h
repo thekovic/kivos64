@@ -17,7 +17,7 @@
 #define PI_STATUS_DMA_DONE      (1 << 3)
 // Write bits.
 #define PI_STATUS_SET_DMA_RESET (1 << 0)
-#define PI_STATUS_CLR_INTERRUPT (1 << 0)
+#define PI_STATUS_CLR_INTERRUPT (1 << 1)
 
 typedef struct PI_registers_s
 {
@@ -35,7 +35,7 @@ typedef struct PI_registers_s
      * Writing to this register will start DMA transfer.
      */
     uint32_t write_length;
-    /** @brief Status of the PI, including DMA busy */
+    /** @brief Status of the PI, including DMA busy. */
     uint32_t status;
     // TODO: add remaining registers
 } PI_registers_t;
