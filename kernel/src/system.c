@@ -48,7 +48,6 @@ void cop1_init(void)
  */
 void vi_init(void)
 {
-    VI_regs->control = (VI_CTRL_TYPE_BLANK | VI_CTRL_AA_RESAMPLE | VI_CTRL_PIXEL_ADVANCE_DEFAULT);
     VI_regs->origin = VI_ORIGIN_SET(0);
     VI_regs->width = VI_WIDTH_SET(320);
     VI_regs->v_interrupt = VI_V_INTR_SET(2);
