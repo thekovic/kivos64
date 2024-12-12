@@ -1,5 +1,4 @@
 # Kernel
-- Display module - we probably need double-buffering
 - Audio driver
 - Joypad driver
 - Asset module (might settle for hardcoded?)
