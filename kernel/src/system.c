@@ -3,6 +3,7 @@
 #include "cop1.h"
 #include "mi.h"
 #include "pi.h"
+#include "si.h"
 #include "vi.h"
 #include "interrupt.h"
 
@@ -13,6 +14,7 @@ int __boot_resettype;
 
 volatile MI_registers_t* const MI_regs = (MI_registers_t*) MI_REG_BASE;
 volatile PI_registers_t* const PI_regs = (PI_registers_t*) PI_REG_BASE;
+volatile SI_registers_t* const SI_regs = (SI_registers_t*) SI_REG_BASE;
 volatile VI_registers_t* const VI_regs = (VI_registers_t*) VI_REG_BASE;
 
 void cop0_status_reset(void)
