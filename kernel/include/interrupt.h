@@ -7,4 +7,6 @@ void interrupt_enable();
 
 void interrupt_set_VI(bool active, uint32_t line);
 
+void interrupt_set_SI(bool active);
+
 #endif

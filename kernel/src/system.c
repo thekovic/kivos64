@@ -69,6 +69,7 @@ void vi_init(void)
 bool interrupt_init(void);
 bool isviewer_init(void);
 void malloc_init(void);
+void joybus_init(void);
 
 void init_kernel(void)
 {
@@ -77,6 +78,7 @@ void init_kernel(void)
     isviewer_init();
     vi_init();
     malloc_init();
+    joybus_init();
 }
 
 void assert(bool condition, const char* msg)

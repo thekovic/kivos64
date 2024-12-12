@@ -5,8 +5,9 @@
 
 #define SI_REG_BASE      (0xA4800000)
 
-#define PIF_RAM_ADDR (0x1FC007C0)
-#define PIF_RAM_CMD_OFFSET (0x3F)
+#define PIF_RAM_ADDR            (0x1FC007C0)
+#define PIF_RAM_CMD_OFFSET      (0x3F)
+#define PIF_CMD_JOYBUS_START    (0x1)
 
 #define SI_STATUS_DMA_BUSY      (1 << 0)
 #define SI_STATUS_IO_BUSY       (1 << 1)

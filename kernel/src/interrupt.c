@@ -1,6 +1,7 @@
 #include "intdef.h"
 #include "cop0.h"
 #include "mi.h"
+#include "si.h"
 #include "vi.h"
 #include "system.h"
 
@@ -96,8 +97,19 @@ void interrupt_set_VI(bool active, uint32_t line)
     }
 }
 
-// Forward declare callback for display module.
+void interrupt_set_SI(bool active)
+{
+    MI_regs->mask = (active) ? MI_MASK_SET_SI : MI_MASK_CLR_SI;
+}
+
+// Forward declare callbacks for interrupts.
+
+// Swaps frame buffers.
 void __display_callback();
+// Issues SI DMA to read controller state.
+void __joypad_callback();
+// Updates internal controller state when SI DMA finishes.
+void __controller_callback();
 
 void interrupt_handler(void)
 {
@@ -113,5 +125,12 @@ void interrupt_handler(void)
         // Clear interrupt.
     	VI_regs->v_current = 4;
         __display_callback();
+        __joypad_callback();
+    }
+    if (status & MI_INTERRUPT_SI)
+    {
+        // Clear interrupt.
+        SI_regs->status = 0;
+        __controller_callback();
     }
 }
