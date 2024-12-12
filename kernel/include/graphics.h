@@ -48,10 +48,31 @@ typedef enum
     FILTER_RESAMPLE
 } filter_t;
 
+/**
+ * @brief Initializes the display module, preparing a double-buffered display
+ * at a given resolution for drawing.
+ * 
+ * @param[in] width     The display width.
+ * @param[in] height    The display height.
+ * @param[in] filter    The filter settings that should be used when the display
+ * is shown on screen by the VI.
+ */
 void display_init(int width, int height, filter_t filter);
 
+/**
+ * @brief Acquire a surface instance of the display that's available to draw to.
+ * 
+ * @return surface_t*   Pointer to surface to draw to. 
+ */
 surface_t* display_get(void);
 
+/**
+ * @brief Returns an acquired display surface and marks it to be displayed on screen
+ * at the next available vblank.
+ * 
+ * @param surface       Pointer to surface acquired by display_get that we wish to
+ * send to the screen.
+ */
 void display_show(surface_t* surface);
 
 /**
