@@ -72,6 +72,7 @@ bool interrupt_init(void);
 bool isviewer_init(void);
 void malloc_init(void);
 void joybus_init(void);
+void audio_init(int frequency);
 
 void init_kernel(void)
 {
@@ -81,6 +82,7 @@ void init_kernel(void)
     vi_init();
     malloc_init();
     joybus_init();
+    audio_init(22050);
 }
 
 void assert(bool condition, const char* msg)

@@ -1,5 +1,6 @@
 #include "intdef.h"
 #include "cop0.h"
+#include "ai.h"
 #include "mi.h"
 #include "si.h"
 #include "vi.h"
@@ -40,7 +41,7 @@ bool interrupt_init(void)
     return false;
 }
 
-void interrupt_disable()
+void interrupt_disable(void)
 {
     // Don't do anything if we haven't initialized.
     if (__interrupt_depth < 0)
@@ -63,7 +64,7 @@ void interrupt_disable()
     __interrupt_depth++;
 }
 
-void interrupt_enable()
+void interrupt_enable(void)
 {
     // Don't do anything if we aren't initialized.
     if (__interrupt_depth < 0)
@@ -84,6 +85,16 @@ void interrupt_enable()
     }
 }
 
+void interrupt_set_AI(bool active)
+{
+    MI_regs->mask = (active) ? MI_MASK_SET_AI : MI_MASK_CLR_AI;
+}
+
+void interrupt_set_SI(bool active)
+{
+    MI_regs->mask = (active) ? MI_MASK_SET_SI : MI_MASK_CLR_SI;
+}
+
 void interrupt_set_VI(bool active, uint32_t line)
 {
     if (active)
@@ -97,13 +108,10 @@ void interrupt_set_VI(bool active, uint32_t line)
     }
 }
 
-void interrupt_set_SI(bool active)
-{
-    MI_regs->mask = (active) ? MI_MASK_SET_SI : MI_MASK_CLR_SI;
-}
-
 // Forward declare callbacks for interrupts.
 
+// 
+void __audio_callback(void);
 // Swaps frame buffers.
 void __display_callback(void);
 // Issues SI DMA to read controller state.
@@ -120,17 +128,23 @@ void interrupt_handler(void)
     // Get MI interrupt status to handle.
     uint32_t status = MI_regs->interrupt & MI_regs->mask;
 
-    if (status & MI_INTERRUPT_VI)
+    if (status & MI_INTERRUPT_AI)
     {
         // Clear interrupt.
-    	VI_regs->v_current = 4;
-        __display_callback();
-        __joypad_callback();
+        AI_regs->status = 0;
+        __audio_callback();
     }
     if (status & MI_INTERRUPT_SI)
     {
         // Clear interrupt.
         SI_regs->status = 0;
         __controller_callback();
+    }
+    if (status & MI_INTERRUPT_VI)
+    {
+        // Clear interrupt.
+    	VI_regs->v_current = 0;
+        __display_callback();
+        __joypad_callback();
     }
 }
