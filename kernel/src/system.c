@@ -1,6 +1,7 @@
 #include "system.h"
 #include "cop0.h"
 #include "cop1.h"
+#include "ai.h"
 #include "mi.h"
 #include "pi.h"
 #include "si.h"
@@ -12,6 +13,7 @@ int __boot_random_seed;
 int __boot_tvtype;
 int __boot_resettype;
 
+volatile AI_registers_t* const AI_regs = (AI_registers_t*) AI_REG_BASE;
 volatile MI_registers_t* const MI_regs = (MI_registers_t*) MI_REG_BASE;
 volatile PI_registers_t* const PI_regs = (PI_registers_t*) PI_REG_BASE;
 volatile SI_registers_t* const SI_regs = (SI_registers_t*) SI_REG_BASE;
