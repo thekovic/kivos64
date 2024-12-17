@@ -11,7 +11,7 @@ IPL3_LDSCRIPT := ipl3.ld
 
 SED ?= sed
 
-# Find installation of GCC for N64 toolchain from libdragon
+# Find installation of GCC for N64 toolchain.
 N64_GCCPREFIX ?= $(N64_INST)
 N64_GCCPREFIX_TRIPLET := $(N64_GCCPREFIX)/bin/mips64-elf-
 # Define tools
@@ -76,4 +76,4 @@ clean:
 
 -include $(wildcard $(BUILD_DIR)/*.d)
 
-.PHONY: all disasm
+.PHONY: all disasm clean
