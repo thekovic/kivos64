@@ -44,4 +44,7 @@ clean:
 		$(MAKE) -C $$dir clean; \
 	done
 
-.PHONY: all $(SUBPROJECTS) clean
+disasm:
+	$(MAKE) -C game disasm KIVOS_ROOT=$(KIVOS_ROOT)
+
+.PHONY: all $(SUBPROJECTS) clean disasm
