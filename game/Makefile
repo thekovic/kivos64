@@ -7,6 +7,7 @@ BUILD_DIR := build
 SOURCE_DIR := .
 INCLUDE_DIR := $(KIVOS_ROOT)/kernel/include
 KERNEL_DIR := $(KIVOS_ROOT)/kernel
+KERNEL_LIB := $(KIVOS_ROOT)/kernel/libkivos64.a
 
 GAME_ROM := kivos64.n64
 GAME_LDSCRIPT := n64.ld
@@ -56,9 +57,9 @@ $(BUILD_DIR)/kivos64.elf: $(GAME_LDSCRIPT) $(OBJS)
 	$(N64_CC) $(N64_CFLAGS) $(N64_LDFLAGS) -o $@ $(filter %.o,$^)
 	$(N64_SIZE) -G $@
 
-%.n64: $(BUILD_DIR)/%.elf
+$(GAME_ROM): $(KERNEL_LIB) $(BUILD_DIR)/kivos64.elf
 	@echo "    [N64] $@"
-	$(N64_TOOL) $(N64_TOOLFLAGS) --toc --output $@ --align 256 $< --align 8
+	$(N64_TOOL) $(N64_TOOLFLAGS) --toc --output $@ --align 256 $(BUILD_DIR)/kivos64.elf --align 8
 
 disasm: $(BUILD_DIR)/kivos64.elf
 	$(N64_OBJDUMP) -D $(BUILD_DIR)/kivos64.elf
