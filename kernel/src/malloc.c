@@ -2,7 +2,7 @@
 #include "system.h"
 
 #define ONE_MB                  (1024 * 1024)
-#define RAM_SIZE                (ONE_MB * 8)
+#define RAM_SIZE                (__boot_memsize)
 #define KERNEL_HEAP_START       (ADDR_TO_KSEG0(1 * ONE_MB))
 #define KERNEL_HEAP_END         (ADDR_TO_KSEG0(RAM_SIZE - ONE_MB))
 
