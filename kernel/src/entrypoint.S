@@ -95,7 +95,7 @@ _abort:
 	j _abort
 	nop
 
-	.section .text
+	.section .irqs
 
 	.global _inthandler
 	.global _inthandler_end

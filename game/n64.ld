@@ -11,25 +11,29 @@ PHDRS
 
 SECTIONS
 {
+    /DISCARD/ : { *(.MIPS.abiflags) }
+
     /* Interrupt vectors are at specific addresses (see page 200). */
     .intvectors 0x80000000 : {
         . = ALIGN(32);
         KEEP(*(.intvectors))
         __intvectors_end = .;
-    } :irq
+    } : irq
 
     /* The text section carries the app code and its relocation address is
     * the first byte of the cart domain in cached, unmapped memory
     */
-    .text 0x80000400 : {
-        __text_start = .;
+    .kernel 0x80000400 : {
+        __kernel_start = .;
         *(.boot)
+        . = ALIGN(16);
+        *(.irqs)
         . = ALIGN(16);
         *(.text)
         *(.text.*)
         . = ALIGN(16);
-        __text_end  = .;
-    } :kernel
+        __kernel_end  = .;
+    } : kernel
 
     .rodata : {
         *(.rdata)
