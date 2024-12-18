@@ -22,7 +22,7 @@ N64_AS := $(N64_GCCPREFIX_TRIPLET)as
 N64_AR = $(N64_GCCPREFIX_TRIPLET)ar
 
 # Set architecture to N64's VR4300 CPU
-N64_CFLAGS := -march=vr4300 -mtune=vr4300
+N64_CFLAGS := -march=vr4300 -mtune=vr4300 -Os
 # Turn off standard C runtime and standard library
 N64_CFLAGS += -ffreestanding -nostdlib
 # Turn on sections so that linker can better optimize unused stuff
