@@ -6,7 +6,7 @@ ENTRY (_start)
 PHDRS
 {
     irq PT_LOAD AT ( 0x80000000 );
-    main PT_LOAD AT ( 0x80000400 );
+    kernel PT_LOAD AT ( 0x80000400 );
 }
 
 SECTIONS
@@ -27,10 +27,9 @@ SECTIONS
         . = ALIGN(16);
         *(.text)
         *(.text.*)
-        *(.init)
         . = ALIGN(16);
         __text_end  = .;
-    } :main
+    } :kernel
 
     .rodata : {
         *(.rdata)
@@ -53,15 +52,6 @@ SECTIONS
         _gp = . + 0x8000;
         *(.sdata)
         *(.sdata.*)
-        . = ALIGN(8);
-    }
-
-    .lit8 : {
-        *(.lit8)
-        . = ALIGN(8);
-    }
-    .lit4 : {
-        *(.lit4)
         . = ALIGN(8);
     }
 
