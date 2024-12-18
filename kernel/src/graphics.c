@@ -151,11 +151,11 @@ void graphics_draw_surface(surface_t* dst, int x, int y, surface_t* src)
 
     for (int src_row = clip_area.y_start; src_row < clip_area.y_end; src_row++ )
     {
-        const int y_index = src_row * src->width;
+        int y_index = src_row * src->width;
 
         for (int src_col = clip_area.x_start; src_col < clip_area.x_end; src_col++ )
         {
-            const int index = (x + src_col) + ((y + src_row) * dst->width);
+            int index = (x + src_col) + ((y + src_row) * dst->width);
             draw_pixel(dst->buffer, index, get_pixel(src->buffer, y_index + src_col));
         }
     }
@@ -186,12 +186,12 @@ void graphics_draw_surface_alpha(surface_t* dst, int x, int y, surface_t* src)
 
     for (int src_row = clip_area.y_start; src_row < clip_area.y_end; src_row++ )
     {
-        const int y_index = src_row * src->width;
+        int y_index = src_row * src->width;
 
         for (int src_col = clip_area.x_start; src_col < clip_area.x_end; src_col++ )
         {
-            const int index = (x + src_col) + ((y + src_row) * dst->width);
-            const uint32_t src_color = get_pixel(src->buffer, y_index + src_col);
+            int index = (x + src_col) + ((y + src_row) * dst->width);
+            uint32_t src_color = get_pixel(src->buffer, y_index + src_col);
             // Defer to basic drawing if color is fully opaque.
             if ((src_color & 0xFF) == 0xFF)
             {
@@ -199,7 +199,7 @@ void graphics_draw_surface_alpha(surface_t* dst, int x, int y, surface_t* src)
             }
             else
             {
-                const uint32_t dst_color = get_pixel(dst->buffer, index);
+                uint32_t dst_color = get_pixel(dst->buffer, index);
                 uint32_t new_color = alphablend_pixel(dst_color, src_color);
                 draw_pixel(dst->buffer, index, new_color);
             }
