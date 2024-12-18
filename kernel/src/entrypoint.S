@@ -23,25 +23,12 @@
 	.section .boot
 	.global _start
 _start:
-	# Initialize small data pointer.
-	la $gp, _gp
-
 	# Reset cop0 status register.
 	jal cop0_status_reset
 	nop
 
-	# Copy bootcode flags stored in DMEM.
-	lui $v0, 0xA400
-	lw $t0, 0x0000($v0)
-	lw $t1, 0x0004($v0)
-	sw $t0, %gprel(__boot_memsize)($gp)
-	sw $t1, %gprel(__boot_$random_seed)($gp)
-
-	# Copy other bootcode flags.
-	lbu $t0, 0x0009($v0)
-	lbu $t1, 0x000A($v0)
-	sw $t0, %gprel(__boot_tvtype)($gp)
-	sw $t1, %gprel(__boot_resettype)($gp)
+	jal bootflags_init
+	nop
 
 	# Initialize kernel modules.
 	jal init_kernel

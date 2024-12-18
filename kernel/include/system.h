@@ -12,6 +12,8 @@ extern int __boot_tvtype;
 // Reset type as detected by IPL3.
 extern int __boot_resettype;
 
+#define SP_DMEM_ADDR    ((volatile uint32_t*) 0xA4000000)
+
 // User segment base, TLB mapped.
 #define MEM_KUSEG_BASE (0)
 // Kernel segment base, directly mapped, cached.

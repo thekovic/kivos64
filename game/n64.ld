@@ -7,6 +7,7 @@ PHDRS
 {
     irq PT_LOAD AT ( 0x80000000 );
     kernel PT_LOAD AT ( 0x80000400 );
+    user PT_LOAD AT ( 0x80080000 );
 }
 
 SECTIONS
@@ -20,71 +21,59 @@ SECTIONS
         __intvectors_end = .;
     } : irq
 
-    /* The text section carries the app code and its relocation address is
-    * the first byte of the cart domain in cached, unmapped memory
-    */
+    /* Kernel space code and data section. */
     .kernel 0x80000400 : {
         __kernel_start = .;
         *(.boot)
         . = ALIGN(16);
         *(.irqs)
         . = ALIGN(16);
-        *(.text)
-        *(.text.*)
+        *(EXCLUDE_FILE (*build/main.o) .text*)
         . = ALIGN(16);
         __kernel_end  = .;
     } : kernel
 
-    .rodata : {
-        *(.rdata)
-        *(.rodata)
-        *(.rodata.*)
-        . = ALIGN(8);
+    .kernel_data : {
+        __kernel_data_start = .;
+        *(EXCLUDE_FILE (*build/main.o) .data*)
+        . = ALIGN(16);
+        *(EXCLUDE_FILE (*build/main.o) .rodata*)
+        . = ALIGN(16);
+        __kernel_data_end = .;
     }
-
-    . = ALIGN(8);
-
-    .data : {
-        __data_start = .;
-        *(.data)
-        *(.data.*)
-        . = ALIGN(8);
-    }
-    
-    /* Small data START */
-    .sdata : {
-        _gp = . + 0x8000;
-        *(.sdata)
-        *(.sdata.*)
-        . = ALIGN(8);
-    }
-
-    . = ALIGN(8);
-    __data_end = .;
 
     /* Here the ROM is finished. The rest is just in RAM */
-    . = ALIGN(8);
+    . = ALIGN(16);
     __rom_end = .;
 
-    .sbss : {
-         __bss_start = .;
-        *(.sbss)
-        *(.sbss.*)
-        *(.scommon)
-        *(.scommon.*)
-    }
-    /* Small data END */
-
-    . = ALIGN(8);
+    . = ALIGN(16);
     .bss : {
         *(.bss)
         *(.bss*)
         *(COMMON)
-        . = ALIGN(8);
+        . = ALIGN(16);
          __bss_end = .;
     }
 
-    . = ALIGN(8);
+    . = ALIGN(16);
+
+    /* User space code and data section. */
+    .user 0x80080000 : {
+        __user_text_start = .;
+        *(build/main.o .text*)
+        . = ALIGN(16);
+        __user_text_end = .;
+        
+    } : user
+
+    .user_data : {
+        __user_data_start = .;
+        *(build/main.o .data*)
+        . = ALIGN(16);
+        *(*build/main.o .rodata*)
+        . = ALIGN(16);
+        __user_data_end = .;
+    }
 
     end = .;
 }

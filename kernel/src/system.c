@@ -24,6 +24,14 @@ void cop0_status_reset(void)
     C0_WRITE_STATUS(C0_STATUS_CU1 | C0_STATUS_SR | C0_STATUS_FR | C0_STATUS_KX | C0_STATUS_SX | C0_STATUS_UX);
 }
 
+void bootflags_init(void)
+{
+    __boot_memsize = *SP_DMEM_ADDR;
+    __boot_random_seed = *(SP_DMEM_ADDR + 4);
+    __boot_tvtype = (*(SP_DMEM_ADDR + 8) >> 16) & 0xFF;
+    __boot_resettype = (*(SP_DMEM_ADDR + 8) >> 8) & 0xFF;
+}
+
 void cop1_init(void)
 {
     // Read initialized value from COP1 status register.
