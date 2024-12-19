@@ -187,6 +187,8 @@ save_callee_saved_regs:
 	ld   $t7,(STACK_GPR+15*8)($sp)
 	jal exception_handler
 	addiu $a0, $sp, 32
+	# Save syscall return value.
+	sd $t8, (STACK_GPR + 24 * 8)($sp)
 	# Bump EPC to acknowledge syscall.
 	lw $t2, STACK_EPC($sp)
 	addi $t2, $t2, 4

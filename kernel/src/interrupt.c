@@ -163,29 +163,32 @@ void exception_reset_mode(void)
 // k0 is designated as the register holding the syscall code.
 #define GET_K0() ({ \
     uint32_t value; \
-    __asm__ volatile ("move %0, $k0": "=r" (value)); \
+    asm volatile ("move %0, $k0": "=r" (value)); \
     value; \
 })
 // t4-7 are designated as registers holding arguments passed by the user to syscall-calling functions.
 #define GET_SYSCALL_ARG1() ({ \
     uint32_t value; \
-    __asm__ volatile ("move %0, $t4": "=r" (value)); \
+    asm volatile ("move %0, $t4": "=r" (value)); \
     value; \
 })
 #define GET_SYSCALL_ARG2() ({ \
     uint32_t value; \
-    __asm__ volatile ("move %0, $t5": "=r" (value)); \
+    asm volatile ("move %0, $t5": "=r" (value)); \
     value; \
 })
 #define GET_SYSCALL_ARG3() ({ \
     uint32_t value; \
-    __asm__ volatile ("move %0, $t6": "=r" (value)); \
+    asm volatile ("move %0, $t6": "=r" (value)); \
     value; \
 })
 #define GET_SYSCALL_ARG4() ({ \
     uint32_t value; \
-    __asm__ volatile ("move %0, $t7": "=r" (value)); \
+    asm volatile ("move %0, $t7": "=r" (value)); \
     value; \
+})
+#define SET_SYSCALL_RETVAL(value) ({ \
+    asm volatile ("move $t8, %0":: "r" (value)); \
 })
 
 void exception_handler(void)
@@ -207,6 +210,9 @@ void exception_handler(void)
                 println_u32("arg2: ", arg2);
                 println_u32("arg3: ", arg3);
                 println_u32("arg4: ", arg4);
+                int result = arg1 + arg2 + arg3 + arg4;
+                println_u32("result: ", result);
+                SET_SYSCALL_RETVAL(result);
                 break;
             
             default:
