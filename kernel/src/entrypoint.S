@@ -117,6 +117,16 @@ save_gp_regs:
 	jal interrupt_reset_mode
 	nop
 
+	lw $t0, STACK_CR($sp)
+	nop
+	andi $t1, $t0, 0xff
+	beqz $t1, interrupt_found
+	nop
+
+exception_found:
+	j _abort
+	nop
+
 interrupt_found:
 	jal interrupt_handler
 	addiu $a0, $sp, 32
