@@ -98,17 +98,21 @@ save_gp_regs:
 	sd $t9, (STACK_GPR + 25 * 8)($sp)
 	sd $ra, (STACK_GPR + 31 * 8)($sp)
 
-	mflo $k0
-	mfhi $k1
-	sd $k0,STACK_LO($sp)
-	sd $k1,STACK_HI($sp)
+	mflo $t0
+	mfhi $t1
+	sd $t0,STACK_LO($sp)
+	sd $t1,STACK_HI($sp)
 
 	# Store COP0 EPC register.
-	mfc0 $k0, $14
-	sw $k0, STACK_EPC($sp)
+	mfc0 $t0, $14
+	sw $t0, STACK_EPC($sp)
 	# Store COP0 STATUS register.
-	mfc0 $k1, $12
-	sw $k1, STACK_SR($sp)
+	mfc0 $t1, $12
+	sw $t1, STACK_SR($sp)
+
+	# Store COP0 CAUSE register.
+	mfc0 $t0, $13
+	sw $t0, STACK_CR($sp)
 
 	jal interrupt_reset_mode
 	nop
