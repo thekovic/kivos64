@@ -5,6 +5,7 @@
 #include "si.h"
 #include "vi.h"
 #include "system.h"
+#include "interrupt.h"
 
 /** @brief Number of nested disable interrupt calls
  *
@@ -149,5 +150,40 @@ void interrupt_handler(void)
     	VI_regs->v_current = 0;
         __display_callback();
         __joypad_callback();
+    }
+}
+
+void exception_reset_mode(void)
+{
+    // Enable FPU.
+    uint32_t sr = C0_STATUS() & C0_STATUS_CU1;
+    C0_WRITE_STATUS(sr);
+}
+
+// k0 is designated as the register holding the syscall code.
+#define GET_K0() ({ \
+    uint32_t value; \
+    __asm__ volatile ("move %0, $k0": "=r" (value)); \
+    value; \
+})
+
+void exception_handler(void)
+{
+    uint32_t cause = C0_CAUSE() & C0_CAUSE_EXC;
+
+    if (cause & C0_CAUSE_EXC_SYSCALL)
+    {
+        uint32_t syscode = GET_K0();
+        switch (syscode)
+        {
+            case SYSCALL_TEST:
+                println_u32("SYSCODE: ", syscode);
+                break;
+            
+            default:
+                println_u32("Unknown syscode: ", syscode);
+                abort();
+                break;
+        }
     }
 }

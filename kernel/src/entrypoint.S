@@ -76,6 +76,9 @@ _inthandler:
 
 	addiu $sp, -EXC_STACK_SIZE
 
+	# Save syscall number.
+	move $k0, $v0
+
 save_gp_regs:
 	# Save caller-saved GPRs.
 	sd $1,  (STACK_GPR +  1 * 8)($sp) # AT
@@ -124,7 +127,17 @@ save_gp_regs:
 	nop
 
 exception_found:
-	j _abort
+	jal exception_reset_mode
+	nop
+
+	jal exception_handler
+	addiu $a0, $sp, 32
+	# Bump EPC to acknowledge syscall.
+	lw $t2, STACK_EPC($sp)
+	addi $t2, $t2, 4
+	sw $t2, STACK_EPC($sp)
+
+	j interrupt_end_gp_regs
 	nop
 
 interrupt_found:
