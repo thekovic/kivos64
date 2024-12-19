@@ -166,6 +166,27 @@ void exception_reset_mode(void)
     __asm__ volatile ("move %0, $k0": "=r" (value)); \
     value; \
 })
+// t4-7 are designated as registers holding arguments passed by the user to syscall-calling functions.
+#define GET_SYSCALL_ARG1() ({ \
+    uint32_t value; \
+    __asm__ volatile ("move %0, $t4": "=r" (value)); \
+    value; \
+})
+#define GET_SYSCALL_ARG2() ({ \
+    uint32_t value; \
+    __asm__ volatile ("move %0, $t5": "=r" (value)); \
+    value; \
+})
+#define GET_SYSCALL_ARG3() ({ \
+    uint32_t value; \
+    __asm__ volatile ("move %0, $t6": "=r" (value)); \
+    value; \
+})
+#define GET_SYSCALL_ARG4() ({ \
+    uint32_t value; \
+    __asm__ volatile ("move %0, $t7": "=r" (value)); \
+    value; \
+})
 
 void exception_handler(void)
 {
@@ -177,7 +198,15 @@ void exception_handler(void)
         switch (syscode)
         {
             case SYSCALL_TEST:
+                int arg1 = GET_SYSCALL_ARG1();
+                int arg2 = GET_SYSCALL_ARG2();
+                int arg3 = GET_SYSCALL_ARG3();
+                int arg4 = GET_SYSCALL_ARG4();
                 println_u32("SYSCODE: ", syscode);
+                println_u32("arg1: ", arg1);
+                println_u32("arg2: ", arg2);
+                println_u32("arg3: ", arg3);
+                println_u32("arg4: ", arg4);
                 break;
             
             default:

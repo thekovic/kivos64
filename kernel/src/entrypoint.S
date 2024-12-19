@@ -129,14 +129,62 @@ save_gp_regs:
 exception_found:
 	jal exception_reset_mode
 	nop
-	# Save the callee-saved FPU regs
-	jal save_fpu_regs
-	move $a0, $sp
-	# Save all the CPU and FPU caller-saved regs, which are normally
-	# not saved during an interrupt.
-	jal save_callee_saved_regs
-	nop
 
+save_fpu_regs:
+	.set noat
+	cfc1 $1, $f31
+	sw $1, STACK_FC31($sp)
+	.set at
+	sdc1 $f0, (STACK_FPR+ 0*8)($sp)
+	sdc1 $f1, (STACK_FPR+ 1*8)($sp)
+	sdc1 $f2, (STACK_FPR+ 2*8)($sp)
+	sdc1 $f3, (STACK_FPR+ 3*8)($sp)
+	sdc1 $f4, (STACK_FPR+ 4*8)($sp)
+	sdc1 $f5, (STACK_FPR+ 5*8)($sp)
+	sdc1 $f6, (STACK_FPR+ 6*8)($sp)
+	sdc1 $f7, (STACK_FPR+ 7*8)($sp)
+	sdc1 $f8, (STACK_FPR+ 8*8)($sp)
+	sdc1 $f9, (STACK_FPR+ 9*8)($sp)
+	sdc1 $f10,(STACK_FPR+10*8)($sp)
+	sdc1 $f11,(STACK_FPR+11*8)($sp)
+	sdc1 $f12,(STACK_FPR+12*8)($sp)
+	sdc1 $f13,(STACK_FPR+13*8)($sp)
+	sdc1 $f14,(STACK_FPR+14*8)($sp)
+	sdc1 $f15,(STACK_FPR+15*8)($sp)
+	sdc1 $f16,(STACK_FPR+16*8)($sp)
+	sdc1 $f17,(STACK_FPR+17*8)($sp)
+	sdc1 $f18,(STACK_FPR+18*8)($sp)
+	sdc1 $f19,(STACK_FPR+19*8)($sp)
+
+save_callee_saved_regs:
+	sd   $s0, (STACK_GPR+16*8)($sp)
+	sd   $s1, (STACK_GPR+17*8)($sp)
+	sd   $s2, (STACK_GPR+18*8)($sp)
+	sd   $s3, (STACK_GPR+19*8)($sp)
+	sd   $s4, (STACK_GPR+20*8)($sp)
+	sd   $s5, (STACK_GPR+21*8)($sp)
+	sd   $s6, (STACK_GPR+22*8)($sp)
+	sd   $s7, (STACK_GPR+23*8)($sp)
+	sd   $gp, (STACK_GPR+28*8)($sp)
+	sd   $fp, (STACK_GPR+30*8)($sp)
+	sdc1 $f20,(STACK_FPR+20*8)($sp)
+	sdc1 $f21,(STACK_FPR+21*8)($sp)
+	sdc1 $f22,(STACK_FPR+22*8)($sp)
+	sdc1 $f23,(STACK_FPR+23*8)($sp)
+	sdc1 $f24,(STACK_FPR+24*8)($sp)
+	sdc1 $f25,(STACK_FPR+25*8)($sp)
+	sdc1 $f26,(STACK_FPR+26*8)($sp)
+	sdc1 $f27,(STACK_FPR+27*8)($sp)
+	sdc1 $f28,(STACK_FPR+28*8)($sp)
+	sdc1 $f29,(STACK_FPR+29*8)($sp)
+	sdc1 $f30,(STACK_FPR+30*8)($sp)
+	sdc1 $f31,(STACK_FPR+31*8)($sp)
+	
+	# Load syscall function arguments.
+	ld   $t4,(STACK_GPR+12*8)($sp)
+	ld   $t5,(STACK_GPR+13*8)($sp)
+	ld   $t6,(STACK_GPR+14*8)($sp)
+	ld   $t7,(STACK_GPR+15*8)($sp)
 	jal exception_handler
 	addiu $a0, $sp, 32
 	# Bump EPC to acknowledge syscall.
@@ -244,62 +292,6 @@ interrupt_end_gp_regs:
 	ld $ra, (STACK_GPR + 31 * 8)($sp)
 	addiu $sp, EXC_STACK_SIZE
 	eret
-	nop
-
-save_callee_saved_regs:
-	sd   $0, (STACK_GPR+ 0*8)($sp)
-	sd   $s0,(STACK_GPR+16*8)($sp)
-	sd   $s1,(STACK_GPR+17*8)($sp)
-	sd   $s2,(STACK_GPR+18*8)($sp)
-	sd   $s3,(STACK_GPR+19*8)($sp)
-	sd   $s4,(STACK_GPR+20*8)($sp)
-	sd   $s5,(STACK_GPR+21*8)($sp)
-	sd   $s6,(STACK_GPR+22*8)($sp)
-	sd   $s7,(STACK_GPR+23*8)($sp)
-	sd   $gp,(STACK_GPR+28*8)($sp)
-	addiu $1, $sp, EXC_STACK_SIZE
-	sd   $1,  (STACK_GPR+29*8)($sp)   # SP
-	sd   $fp, (STACK_GPR+30*8)($sp)
-	sdc1 $f20,(STACK_FPR+20*8)($sp)
-	sdc1 $f21,(STACK_FPR+21*8)($sp)
-	sdc1 $f22,(STACK_FPR+22*8)($sp)
-	sdc1 $f23,(STACK_FPR+23*8)($sp)
-	sdc1 $f24,(STACK_FPR+24*8)($sp)
-	sdc1 $f25,(STACK_FPR+25*8)($sp)
-	sdc1 $f26,(STACK_FPR+26*8)($sp)
-	sdc1 $f27,(STACK_FPR+27*8)($sp)
-	sdc1 $f28,(STACK_FPR+28*8)($sp)
-	sdc1 $f29,(STACK_FPR+29*8)($sp)
-	sdc1 $f30,(STACK_FPR+30*8)($sp)
-	sdc1 $f31,(STACK_FPR+31*8)($sp)
-	jr $ra
-	nop
-
-	.p2align 5
-save_fpu_regs:
-	cfc1 $1, $f31
-	sw $1, STACK_FC31($a0)
-	sdc1 $f0, (STACK_FPR+ 0*8)($a0)
-	sdc1 $f1, (STACK_FPR+ 1*8)($a0)
-	sdc1 $f2, (STACK_FPR+ 2*8)($a0)
-	sdc1 $f3, (STACK_FPR+ 3*8)($a0)
-	sdc1 $f4, (STACK_FPR+ 4*8)($a0)
-	sdc1 $f5, (STACK_FPR+ 5*8)($a0)
-	sdc1 $f6, (STACK_FPR+ 6*8)($a0)
-	sdc1 $f7, (STACK_FPR+ 7*8)($a0)
-	sdc1 $f8, (STACK_FPR+ 8*8)($a0)
-	sdc1 $f9, (STACK_FPR+ 9*8)($a0)
-	sdc1 $f10,(STACK_FPR+10*8)($a0)
-	sdc1 $f11,(STACK_FPR+11*8)($a0)
-	sdc1 $f12,(STACK_FPR+12*8)($a0)
-	sdc1 $f13,(STACK_FPR+13*8)($a0)
-	sdc1 $f14,(STACK_FPR+14*8)($a0)
-	sdc1 $f15,(STACK_FPR+15*8)($a0)
-	sdc1 $f16,(STACK_FPR+16*8)($a0)
-	sdc1 $f17,(STACK_FPR+17*8)($a0)
-	sdc1 $f18,(STACK_FPR+18*8)($a0)
-	sdc1 $f19,(STACK_FPR+19*8)($a0)
-	jr $ra
 	nop
 
 _inthandler_end:
