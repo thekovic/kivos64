@@ -6,6 +6,9 @@
 #include "vi.h"
 #include "system.h"
 #include "interrupt.h"
+#include "audio.h"
+#include "controller.h"
+#include "graphics.h"
 
 /** @brief Number of nested disable interrupt calls
  *
@@ -155,8 +158,8 @@ void interrupt_handler(void)
 
 void exception_reset_mode(void)
 {
-    // Enable FPU.
-    uint32_t sr = C0_STATUS() | C0_STATUS_CU1;
+    // Enable FPU and reentrant exception to be able to service interrupts while doing syscalls.
+    uint32_t sr = C0_STATUS() | C0_STATUS_CU1 | C0_STATUS_IE;
     C0_WRITE_STATUS(sr);
 }
 
@@ -198,27 +201,27 @@ void exception_handler(void)
     if (cause & C0_CAUSE_EXC_SYSCALL)
     {
         uint32_t syscode = GET_K0();
-        switch (syscode)
+        if (syscode == SYSCALL_DISPLAY_INIT)
         {
-            case SYSCALL_TEST:
-                int arg1 = GET_SYSCALL_ARG1();
-                int arg2 = GET_SYSCALL_ARG2();
-                int arg3 = GET_SYSCALL_ARG3();
-                int arg4 = GET_SYSCALL_ARG4();
-                println_u32("SYSCODE: ", syscode);
-                println_u32("arg1: ", arg1);
-                println_u32("arg2: ", arg2);
-                println_u32("arg3: ", arg3);
-                println_u32("arg4: ", arg4);
-                int result = arg1 + arg2 + arg3 + arg4;
-                println_u32("result: ", result);
-                SET_SYSCALL_RETVAL(result);
-                break;
-            
-            default:
-                println_u32("Unknown syscode: ", syscode);
-                abort();
-                break;
+            int width = GET_SYSCALL_ARG1();
+            int height = GET_SYSCALL_ARG2();
+            filter_t filter = GET_SYSCALL_ARG3();
+            display_init(width, height, filter);
+        }
+        else if (syscode == SYSCALL_DISPLAY_GET)
+        {
+            uint32_t retval = (uint32_t) display_get();
+            SET_SYSCALL_RETVAL(retval);
+        }
+        else if (syscode == SYSCALL_DISPLAY_SHOW)
+        {
+            surface_t* display = (surface_t*) GET_SYSCALL_ARG1();
+            display_show(display);
+        }
+        else
+        {
+            println_u32("Unknown syscode: ", syscode);
+            abort();
         }
     }
 }

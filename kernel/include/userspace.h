@@ -6,11 +6,6 @@
 #include "controller.h"
 #include "graphics.h"
 
-void syscall_test()
-{
-    
-}
-
 void audio_play_square_wave_user(float frequency, float duration, float volume)
 {
     audio_play_square_wave(frequency, duration, volume);
@@ -33,17 +28,30 @@ void graphics_draw_surface_alpha_user(surface_t* dst, int x, int y, surface_t* s
 
 void display_init_user(int width, int height, filter_t filter)
 {
-    display_init(width, height, filter);
+    asm volatile("move $t4, %0" : : "r" (width));
+    asm volatile("move $t5, %0" : : "r" (height));
+    asm volatile("move $t6, %0" : : "r" (filter));
+    asm volatile("li $v0, 5");
+    asm volatile("syscall");
 }
 
 surface_t* display_get_user(void)
 {
-    return display_get();
+    uint32_t retval;
+
+    asm volatile("li $v0, 6");
+    asm volatile("syscall");
+
+    asm volatile("move %0, $t8" : "=r" (retval));
+    
+    return (surface_t*) retval;
 }
 
 void display_show_user(surface_t* surface)
 {
-    display_show(surface);
+    asm volatile("move $t4, %0" : : "r" ((uint32_t) surface));
+    asm volatile("li $v0, 7");
+    asm volatile("syscall");
 }
 
 #endif
