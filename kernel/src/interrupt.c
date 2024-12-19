@@ -201,7 +201,26 @@ void exception_handler(void)
     if (cause & C0_CAUSE_EXC_SYSCALL)
     {
         uint32_t syscode = GET_K0();
-        if (syscode == SYSCALL_DISPLAY_INIT)
+        if (syscode == SYSCALL_CONTROLLER_POLL)
+        {
+            uint32_t retval = controller_poll_and_get_buttons_held().raw;
+            SET_SYSCALL_RETVAL(retval);
+        }
+        else if (syscode == SYSCALL_GRAPHICS_FILL)
+        {
+            surface_t* surface = (surface_t*) GET_SYSCALL_ARG1();
+            uint32_t color = GET_SYSCALL_ARG2();
+            graphics_fill(surface, color);
+        }
+        else if (syscode == SYSCALL_GRAPHICS_DRAW_SPRITE)
+        {
+            surface_t* dst = (surface_t*) GET_SYSCALL_ARG1();
+            int x = GET_SYSCALL_ARG2();
+            int y = GET_SYSCALL_ARG3();
+            surface_t* src = (surface_t*) GET_SYSCALL_ARG4();
+            graphics_draw_surface_alpha(dst, x, y, src);
+        }
+        else if (syscode == SYSCALL_DISPLAY_INIT)
         {
             int width = GET_SYSCALL_ARG1();
             int height = GET_SYSCALL_ARG2();

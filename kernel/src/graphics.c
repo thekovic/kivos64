@@ -1,5 +1,6 @@
 #include "graphics.h"
 #include "memory.h"
+#include "system.h"
 
 surface_t surface_alloc(uint16_t width, uint16_t height)
 {
@@ -182,6 +183,9 @@ void graphics_draw_surface_alpha(surface_t* dst, int x, int y, surface_t* src)
         return;
     }
 
+    // Make sure we touch src data in kernel segment.
+    uint32_t* src_buffer = (uint32_t*) ADDR_TO_KSEG0((uint32_t) src->buffer);
+
     clip_area_t clip_area = clip_surface(dst, x, y, src);
 
     for (int src_row = clip_area.y_start; src_row < clip_area.y_end; src_row++ )
@@ -191,7 +195,7 @@ void graphics_draw_surface_alpha(surface_t* dst, int x, int y, surface_t* src)
         for (int src_col = clip_area.x_start; src_col < clip_area.x_end; src_col++ )
         {
             int index = (x + src_col) + ((y + src_row) * dst->width);
-            uint32_t src_color = get_pixel(src->buffer, y_index + src_col);
+            uint32_t src_color = get_pixel(src_buffer, y_index + src_col);
             // Defer to basic drawing if color is fully opaque.
             if ((src_color & 0xFF) == 0xFF)
             {
