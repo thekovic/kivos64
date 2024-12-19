@@ -14,7 +14,14 @@ void audio_play_square_wave_user(float frequency, float duration, float volume)
 
 controller_buttons_t controller_poll_and_get_buttons_held_user(void)
 {
-    return controller_poll_and_get_buttons_held();
+    uint32_t retval;
+
+    asm volatile("li $v0, 2");
+    asm volatile("syscall");
+
+    asm volatile("move %0, $t8" : "=r" (retval));
+
+    return (controller_buttons_t) {.raw = retval};
 }
 
 void graphics_fill_user(surface_t* surface, uint32_t color)
