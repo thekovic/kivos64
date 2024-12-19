@@ -7,9 +7,23 @@
 #include "graphics.h"
 #include "system.h"
 
+// So apparently having this specific function optimized under -Os
+// breaks the entire operating system. I guess it plunders some register
+// and thus somehow breaks my syscall argument ABI. I don't have time
+// to figure out how to arm wrestle the compiler to make it behave
+// so we just disable optimizations on this function.
+__attribute__((optimize("O0")))
 void audio_play_square_wave_user(float frequency, float duration, float volume)
 {
-    audio_play_square_wave(frequency, duration, volume);
+    uint32_t frequency_encoded = (uint32_t) frequency;
+    uint32_t duration_encoded = (uint32_t) (duration * 100.0f);
+    uint32_t volume_encoded = (uint32_t) (volume * 100.0f);
+
+    asm volatile("move $t4, %0" : : "r" (frequency_encoded));
+    asm volatile("move $t5, %0" : : "r" (duration_encoded));
+    asm volatile("move $t6, %0" : : "r" (volume_encoded));
+    asm volatile("li $v0, 1");
+    asm volatile("syscall");
 }
 
 controller_buttons_t controller_poll_and_get_buttons_held_user(void)

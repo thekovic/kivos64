@@ -201,7 +201,19 @@ void exception_handler(void)
     if (cause & C0_CAUSE_EXC_SYSCALL)
     {
         uint32_t syscode = GET_K0();
-        if (syscode == SYSCALL_CONTROLLER_POLL)
+        if (syscode == SYSCALL_AUDIO_PLAY)
+        {
+            uint32_t frequency_encoded = GET_SYSCALL_ARG1();
+            uint32_t duration_encoded = GET_SYSCALL_ARG2();
+            uint32_t volume_encoded = GET_SYSCALL_ARG3();
+            
+            float frequency = (float) frequency_encoded;
+            float duration = ((float) duration_encoded) / 100.0f;
+            float volume = ((float) volume_encoded) / 100.0f;
+
+            audio_play_square_wave(frequency, duration, volume);
+        }
+        else if (syscode == SYSCALL_CONTROLLER_POLL)
         {
             uint32_t retval = controller_poll_and_get_buttons_held().raw;
             SET_SYSCALL_RETVAL(retval);
