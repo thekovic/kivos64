@@ -36,7 +36,8 @@ _start:
 
 	# Call main app.
 	li $a0, 0
-	jal main
+	la $t0, main
+	jalr $t0
 	li $a1, 0
 
 # Infinite abort loop
