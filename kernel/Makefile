@@ -7,7 +7,8 @@ BUILD_DIR := build
 SOURCE_DIR := src
 INCLUDE_DIR := include
 
-KERNEL_LIB := libkivos64.a
+GAME_ROM := kivos64.n64
+GAME_LDSCRIPT := n64.ld
 
 SRCS := $(shell find $(SOURCE_DIR)/ -type f -name '*.c' | sort)
 OBJS := $(SRCS:$(SOURCE_DIR)/%.c=$(BUILD_DIR)/%.o)
@@ -19,7 +20,11 @@ N64_GCCPREFIX_TRIPLET := $(N64_GCCPREFIX)/bin/mips64-elf-
 # Define tools
 N64_CC := $(N64_GCCPREFIX_TRIPLET)gcc
 N64_AS := $(N64_GCCPREFIX_TRIPLET)as
-N64_AR = $(N64_GCCPREFIX_TRIPLET)ar
+N64_OBJDUMP := $(N64_GCCPREFIX_TRIPLET)objdump
+N64_SIZE := $(N64_GCCPREFIX_TRIPLET)size
+
+N64_TOOL := $(KIVOS_ROOT)/tools/n64tool
+N64_TOOLFLAGS := --title "kivos64" --header "$(KIVOS_ROOT)/boot/kivos64_ipl3.n64"
 
 # Set architecture to N64's VR4300 CPU
 N64_CFLAGS := -march=vr4300 -mtune=vr4300 -Os
@@ -37,7 +42,9 @@ N64_CFLAGS += -I$(INCLUDE_DIR)
 
 N64_ASFLAGS := -march=vr4300 -mtune=vr4300 -Wa,--fatal-warnings -MMD
 
-all: $(KERNEL_LIB)
+N64_LDFLAGS = -g -Wl,-T$(GAME_LDSCRIPT) -Wl,-Map=$(BUILD_DIR)/kivos64.map -Wl,--gc-sections
+
+all: $(GAME_ROM)
 
 # C rule.
 $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c 
@@ -51,11 +58,19 @@ $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.S
 	@echo "    [AS] $<"
 	$(N64_CC) -c $(N64_ASFLAGS) -o $@ $<
 
-$(KERNEL_LIB): $(OBJS)
-	@echo "    [AR] $@"
-	$(N64_AR) -rcs -o $@ $^
+$(BUILD_DIR)/kivos64.elf: $(GAME_LDSCRIPT) $(OBJS)
+	@echo "    [LD] $@"
+	$(N64_CC) $(N64_CFLAGS) $(N64_LDFLAGS) -o $@ $(filter %.o,$^)
+	$(N64_SIZE) -G $@
+
+$(GAME_ROM): $(BUILD_DIR)/kivos64.elf
+	@echo "    [N64] $@"
+	$(N64_TOOL) $(N64_TOOLFLAGS) --toc --output $@ --align 256 $(BUILD_DIR)/kivos64.elf --align 8
+
+disasm: $(BUILD_DIR)/kivos64.elf
+	$(N64_OBJDUMP) -D $(BUILD_DIR)/kivos64.elf
 
 clean:
-	rm -rf $(BUILD_DIR) $(KERNEL_LIB)
+	rm -rf $(BUILD_DIR) $(GAME_ROM)
 
-.PHONY: all clean
+.PHONY: all disasm clean

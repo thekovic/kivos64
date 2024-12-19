@@ -1,13 +1,11 @@
 #include "intdef.h"
-#include "graphics.h"
+#include "userspace.h"
 #include "system.h"
-#include "controller.h"
-#include "audio.h"
 
-#include "sprite_astroman.h"
-#include "sprite_k.h"
-#include "sprite_i.h"
-#include "sprite_v.h"
+#include "game/sprite_astroman.h"
+#include "game/sprite_k.h"
+#include "game/sprite_i.h"
+#include "game/sprite_v.h"
 
 #define RES_WIDTH  (320)
 #define RES_HEIGHT (240)
@@ -125,7 +123,7 @@ void game_obj_draw(surface_t* display, game_obj_t* game_obj)
         return;
     }
 
-    graphics_draw_surface_alpha(display, game_obj->x, game_obj->y, &game_obj->sprite);
+    graphics_draw_surface_alpha_user(display, game_obj->x, game_obj->y, &game_obj->sprite);
 }
 
 void game_obj_spawn(game_obj_t* game_obj)
@@ -158,16 +156,13 @@ void game_obj_spawn(game_obj_t* game_obj)
 
 void main(void)
 {
-    display_init(RES_WIDTH, RES_HEIGHT, FILTER_NONE);
+    display_init_user(RES_WIDTH, RES_HEIGHT, FILTER_NONE);
 
     uint32_t bg_fill = RGBA32(0, 0, 0, 255);
 
-    println("Game started!");
-
     for (;;)
     {
-        controller_poll();
-        controller_buttons_t buttons = controller_get_buttons_held();
+        controller_buttons_t buttons = controller_poll_and_get_buttons_held_user();
         if (buttons.d_up || buttons.c_up)
         {
             player.y--;
@@ -222,22 +217,22 @@ void main(void)
             // Play sound.
             if (collected_letters == 3)
             {
-                audio_play_square_wave(220.0f, 10.0f / 60.0f, 0.2f);
+                audio_play_square_wave_user(220.0f, 10.0f / 60.0f, 0.2f);
                 collected_letters = 0;
             }
             else
             {
-                audio_play_square_wave(110.0f, 5.0f / 60.0f, 0.2f);
+                audio_play_square_wave_user(110.0f, 5.0f / 60.0f, 0.2f);
             }
         }
         
-        surface_t* display = display_get();
-        graphics_fill(display, bg_fill);
+        surface_t* display = display_get_user();
+        graphics_fill_user(display, bg_fill);
         for (int i = 0; i < GAME_OBJ_COUNT; i++)
         {
             game_obj_draw(display, game_objs[i]);
         }
-        display_show(display);
+        display_show_user(display);
 
         frame_counter++;
     }

@@ -1,7 +1,7 @@
 # KIVOS64 root Makefile.
 
 # Define the order of subprojects.
-SUBPROJECTS := tools boot kernel game
+SUBPROJECTS := tools boot kernel
 
 # Find installation of GCC for N64 toolchain.
 N64_GCCPREFIX ?= $(N64_INST)
@@ -10,6 +10,7 @@ KIVOS_ROOT := $(CURDIR)
 
 # Default target: build all subprojects in the specified order.
 all: $(SUBPROJECTS)
+	@echo "KIVOS64 built successfully!"
 
 tools:
 	$(MAKE) -C $@
@@ -28,14 +29,6 @@ ifeq ($(N64_GCCPREFIX),)
 else
 	@echo "GCC toolchain for N64 is installed. Building kernel..."
 endif
-	$(MAKE) -C $@
-
-game:
-ifeq ($(N64_GCCPREFIX),)
-	$(error "GCC toolchain for N64 is not installed. Please install it to continue.")
-else
-	@echo "GCC toolchain for N64 is installed. Building game..."
-endif
 	$(MAKE) -C $@ KIVOS_ROOT=$(KIVOS_ROOT)
 
 # Clean all subprojects.
@@ -45,6 +38,6 @@ clean:
 	done
 
 disasm:
-	$(MAKE) -C game disasm KIVOS_ROOT=$(KIVOS_ROOT)
+	$(MAKE) -C kernel disasm KIVOS_ROOT=$(KIVOS_ROOT)
 
 .PHONY: all $(SUBPROJECTS) clean disasm
