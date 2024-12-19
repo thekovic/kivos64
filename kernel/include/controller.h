@@ -72,4 +72,6 @@ controller_buttons_t controller_get_buttons_released(void);
 
 controller_buttons_t controller_get_buttons_held(void);
 
+controller_buttons_t controller_poll_and_get_buttons_held(void);
+
 #endif

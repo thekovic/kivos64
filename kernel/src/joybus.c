@@ -107,3 +107,9 @@ controller_buttons_t controller_get_buttons_held(void)
     uint16_t previous_buttons = previous.buttons.raw;
     return (controller_buttons_t) {.raw = current_buttons & previous_buttons};
 }
+
+controller_buttons_t controller_poll_and_get_buttons_held(void)
+{
+    controller_poll();
+    return controller_get_buttons_held();
+}
