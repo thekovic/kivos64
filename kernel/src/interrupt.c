@@ -108,9 +108,16 @@ void interrupt_set_VI(bool active, uint32_t line)
     }
 }
 
+void interrupt_reset_mode(void)
+{
+    // Disable FPU, reset to kernel mode, disable exception flag and disable global exceptions.
+    uint32_t sr = C0_STATUS() & ~(C0_STATUS_CU1 | C0_STATUS_KSU | C0_STATUS_EXL | C0_STATUS_IE);
+    C0_WRITE_STATUS(sr);
+}
+
 // Forward declare callbacks for interrupts.
 
-// 
+// Sends next audio buffer to AI DMA to be played.
 void __audio_callback(void);
 // Swaps frame buffers.
 void __display_callback(void);
@@ -121,10 +128,6 @@ void __controller_callback(void);
 
 void interrupt_handler(void)
 {
-    // Disable FPU, reset to kernel mode, disable exception flag and disable global exceptions.
-    uint32_t sr = C0_STATUS() & ~(C0_STATUS_CU1 | C0_STATUS_KSU | C0_STATUS_EXL | C0_STATUS_IE);
-    C0_WRITE_STATUS(sr);
-
     // Get MI interrupt status to handle.
     uint32_t status = MI_regs->interrupt & MI_regs->mask;
 

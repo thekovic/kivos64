@@ -110,6 +110,9 @@ save_gp_regs:
 	mfc0 $k1, $12
 	sw $k1, STACK_SR($sp)
 
+	jal interrupt_reset_mode
+	nop
+
 interrupt_found:
 	jal interrupt_handler
 	addiu $a0, $sp, 32
