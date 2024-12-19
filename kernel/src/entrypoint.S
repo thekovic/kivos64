@@ -64,20 +64,21 @@ _inthandler:
 # registers, the ABI requires reserving that space and called functions might
 # use it to store local variables).
 # So we keep 0-31 empty, and we start saving GPRs from 32, and then FPR.
-#define EXC_STACK_SIZE (544+32)
-#define STACK_GPR      32
-#define STACK_HI     (STACK_GPR+(32*8))
-#define STACK_LO     (STACK_HI+8)
-#define STACK_SR     (STACK_LO+8)
-#define STACK_CR     (STACK_SR+4)
-#define STACK_EPC    (STACK_CR+4)
-#define STACK_FC31   (STACK_EPC+4)
-#define STACK_FPR    (STACK_FC31+4)
+#define EXC_STACK_SIZE  (544+32)
+#define STACK_GPR       (32)
+#define STACK_HI        (STACK_GPR+(32*8))
+#define STACK_LO        (STACK_HI+8)
+#define STACK_SR        (STACK_LO+8)
+#define STACK_CR        (STACK_SR+4)
+#define STACK_EPC       (STACK_CR+4)
+#define STACK_FC31      (STACK_EPC+4)
+#define STACK_FPR       (STACK_FC31+4)
 
 	addiu $sp, -EXC_STACK_SIZE
 
+save_gp_regs:
 	# Save caller-saved GPRs.
-	sd $1, (STACK_GPR +  1 * 8)($sp) # AT
+	sd $1,  (STACK_GPR +  1 * 8)($sp) # AT
 	.set at
 	sd $v0, (STACK_GPR +  2 * 8)($sp)
 	sd $v1, (STACK_GPR +  3 * 8)($sp)
@@ -113,7 +114,8 @@ interrupt_found:
 	jal interrupt_handler
 	addiu $a0, $sp, 32
 
-	# Restore COP0 STATUS register. This also disables reent$rant exceptions
+interrupt_end:
+	# Restore COP0 STATUS register. This also disables reentrant exceptions
 	# by restoring the EXL bit.
 	.set noat
 	lw $t0, STACK_SR($sp)
@@ -126,6 +128,7 @@ interrupt_found:
 	mthi $t1
 	mtc0 $t2, $14
 
+interrupt_end_gp_regs:
 	# restore GPRs
 	ld $1, (STACK_GPR +  1 * 8)($sp)
 	ld $v0, (STACK_GPR +  2 * 8)($sp)
