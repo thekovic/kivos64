@@ -156,7 +156,7 @@ void interrupt_handler(void)
 void exception_reset_mode(void)
 {
     // Enable FPU.
-    uint32_t sr = C0_STATUS() & C0_STATUS_CU1;
+    uint32_t sr = C0_STATUS() | C0_STATUS_CU1;
     C0_WRITE_STATUS(sr);
 }
 

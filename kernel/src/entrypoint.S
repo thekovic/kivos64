@@ -129,6 +129,13 @@ save_gp_regs:
 exception_found:
 	jal exception_reset_mode
 	nop
+	# Save the callee-saved FPU regs
+	jal save_fpu_regs
+	move $a0, $sp
+	# Save all the CPU and FPU caller-saved regs, which are normally
+	# not saved during an interrupt.
+	jal save_callee_saved_regs
+	nop
 
 	jal exception_handler
 	addiu $a0, $sp, 32
@@ -137,7 +144,7 @@ exception_found:
 	addi $t2, $t2, 4
 	sw $t2, STACK_EPC($sp)
 
-	j interrupt_end_gp_regs
+	j exception_end
 	nop
 
 interrupt_found:
