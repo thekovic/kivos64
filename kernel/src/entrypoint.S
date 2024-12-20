@@ -1,19 +1,19 @@
 	# Interrupt vector table.
 	.section .intvectors, "ax"
 	.set reorder
-
+	# TLB miss.
 	.org 0
 	j _inthandler
 	nop
-
+	# XTLB miss.
 	.org 0x80
 	j _inthandler
 	nop
-
+	# Cache error.
 	.org 0x100
 	j _inthandler
 	nop
-
+	# Everything else.
 	.org 0x180
 	j _inthandler
 	nop
