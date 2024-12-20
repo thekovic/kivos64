@@ -244,6 +244,9 @@
 
 
 #define C0_CAUSE_EXC                (0b11111 << 2)    // Cause: Last exception code (5 bits).
+#define C0_CAUSE_EXC_TLB_MOD        (1 << 2)
+#define C0_CAUSE_EXC_TLB_MISS_LOAD  (2 << 2)
+#define C0_CAUSE_EXC_TLB_MISS_STORE (3 << 2)
 #define C0_CAUSE_EXC_SYSCALL        (8 << 2)
 #define C0_CAUSE_EXC_BREAKPOINT     (9 << 2)
 #define C0_CAUSE_EXC_COP            (11 << 2)

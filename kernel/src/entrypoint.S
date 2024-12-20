@@ -34,11 +34,16 @@ _start:
 	jal init_kernel
 	nop
 
+	# Prepare change to user mode.
+	mfc0 $t1, $12
+	ori $t1, 0x10
 	# Call main app.
-	li $a0, 0
 	la $t0, main
-	jalr $t0
+	li $a0, 0
 	li $a1, 0
+	jalr $t0
+	# Pass the change to user mode in delay slot.
+	mtc0 $t1, $12
 
 # Infinite abort loop
 _abort:

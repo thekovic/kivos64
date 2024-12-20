@@ -255,4 +255,11 @@ void exception_handler(void)
             abort();
         }
     }
+    else
+    {
+        // Exception we're not prepared to handle (for example, TLB miss).
+        // In such a case, abort.
+        println_u32("Unknown cause: ", cause >> 2);
+        abort();
+    }
 }

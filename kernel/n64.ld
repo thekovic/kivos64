@@ -7,7 +7,7 @@ PHDRS
 {
     irq PT_LOAD AT ( 0x80000000 );
     kernel PT_LOAD AT ( 0x80000400 );
-    user PT_LOAD AT ( 0x80080000 );
+    user PT_LOAD AT ( 0x00080000 );
 }
 
 SECTIONS
@@ -58,7 +58,7 @@ SECTIONS
     . = ALIGN(16);
 
     /* User space code and data section. */
-    .user 0x80080000 : {
+    .user 0x00080000 : {
         __user_text_start = .;
         *(build/main.o .text*)
         . = ALIGN(16);
